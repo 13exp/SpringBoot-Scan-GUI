@@ -419,6 +419,7 @@ class RootFrom:
                 self.info_text.insert(tk.INSERT,info)
                 self.info_text.insert(tk.INSERT, '\n')
         else:
+            proxies = []
             with open(proxy,"r") as f:
                 proxy_file = f.read().split("\n")
                 for i in proxy_file:
