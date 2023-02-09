@@ -419,9 +419,11 @@ class RootFrom:
                     self.info_text.insert(tk.INSERT,info)
                     self.info_text.insert(tk.INSERT, '\n')
             except:
-                info = "代理不可用 {} ".format(proxies)
+                info = "代理不可用 可更换或添加 {} ".format(proxies)
                 self.info_text.insert(tk.INSERT,info)
                 self.info_text.insert(tk.INSERT, '\n')
+                if self.proxy.get() != "":
+                    self.proxy.delete(0,'end')
         else:
             proxies = []
             with open(proxy,"r") as f:
@@ -597,6 +599,9 @@ class RootFrom:
         except KeyboardInterrupt:
             messagebox.showinfo('Info','interrupted by user, killing all threads...')
     def Scan(self):
+        back = "[*]检测代理中请稍等"
+        self.info_text.insert(tk.INSERT,back)
+        self.info_text.insert(tk.INSERT, '\n')
         input_url = self.url_check()
         url_proxy = self.url_proxy_get(input_url)
         url = url_proxy[0]
