@@ -210,6 +210,7 @@ class RootFrom:
         Exit = messagebox.askokcancel('退出','确定退出吗?')
         if Exit == True:
             self.root.destroy()
+        sys.exit()
     def shell_info(self):
         messagebox.showinfo("Shell信息","tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
     def vule_info(self):
@@ -395,11 +396,12 @@ class RootFrom:
                     urls.append(i)
             url = urls
         proxy = self.proxy_check()
-        proxies = []
         testurl = "https://www.baidu.com/"
         headers = {"User-Agent": "Mozilla/5.0"}
         if os.path.isfile(proxy) != True:
-            proxies = proxy
+            proxies = proxy.strip("/")
+            if "/" in proxies:
+                proxies = proxies.split("/")[-1]
             proxies = {
                     "http": "http://%(proxy)s/" % {'proxy': proxies},
                     "https": "http://%(proxy)s/" % {'proxy': proxies}
