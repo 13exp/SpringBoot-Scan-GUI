@@ -12,6 +12,8 @@ class RootFrom:
     def __init__(self):
         global user_agent
         global cves
+        global no_proxies
+        #global no_proxy
         banner =r'''
   ______                       __                      _______                        __     
  /      \                     |  \                    |       \                      |  \    
@@ -46,6 +48,8 @@ class RootFrom:
       "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0",
       "Opera/9.80 (Windows NT 5.1; U; zh-sg) Presto/2.9.181 Version/12.00")
         cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947")
+        no_proxies = []
+        #no_proxy = []
         self.root = tk.Tk()
         self.root.title("SpringBoot-Scan-GUI")
         self.root.geometry("1024x439")
@@ -403,9 +407,9 @@ class RootFrom:
             if "/" in proxies:
                 proxies = proxies.split("/")[-1]
             proxies = {
-                    "http": "http://%(proxy)s/" % {'proxy': proxies},
-                    "https": "http://%(proxy)s/" % {'proxy': proxies}
-                    }
+                        "http": "http://%(proxy)s/" % {'proxy': proxies},
+                        "https": "http://%(proxy)s/" % {'proxy': proxies}
+                        }
             try:
                 requests.packages.urllib3.disable_warnings()
                 res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
@@ -424,30 +428,37 @@ class RootFrom:
                 proxy_file = f.read().split("\n")
                 for i in proxy_file:
                     if i != "":
-                        proxies = proxy.strip("/")
-                        if "/" in proxies:
-                            proxies = proxies.split("/")[-1]
-                        proxies.append(i)           
-            for i in proxies:
-                proxies = {
-                    "http": "http://%(proxy)s/" % {'proxy': i},
-                    "https": "http://%(proxy)s/" % {'proxy': i}
-                    }
-                try:
-                    requests.packages.urllib3.disable_warnings()
-                    res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
-                    if res.status_code == 200:
-                        proxies = proxies
-                        info = "代理正常 {} ".format(proxies)
-                        self.info_text.insert(tk.INSERT,info)
-                        self.info_text.insert(tk.INSERT, '\n')
-                        break
+                        i = i.strip("/")
+                        if "/" in i:
+                            i = i.split("/")[-1]
+                        proxies.append(i)
+            if len(proxies) == len(no_proxies):
+                info = "代理不可用"
+                proxies = ""
+            else:
+                info = "代理不可用"
+                for i in proxies:
+                    if i in no_proxies:
+                        pass
                     else:
-                        continue
-                except:
-                    info = "代理不可用 {} ".format(proxies)
-                    self.info_text.insert(tk.INSERT,info)
-                    self.info_text.insert(tk.INSERT, '\n')
+                        proxies = {
+                            "http": "http://%(proxy)s/" % {'proxy': i},
+                            "https": "http://%(proxy)s/" % {'proxy': i}
+                            }
+                        try:
+                            requests.packages.urllib3.disable_warnings()
+                            res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
+                            if res.status_code == 200:
+                                proxies = proxies
+                                info = "代理正常 {} ".format(proxies)
+                                self.info_text.insert(tk.INSERT,info)
+                                self.info_text.insert(tk.INSERT, '\n')
+                                break
+                        except:
+                            no_proxies.append(i)
+                            #print(no_proxies)
+                            #self.info_text.insert(tk.INSERT,info)
+                            #self.info_text.insert(tk.INSERT, '\n')
         return url,info,proxies
     def info_check(self, urllist, proxies, ua):
         if not os.path.exists("urlout.txt"):
@@ -595,8 +606,8 @@ class RootFrom:
         info = url_proxy[1]
         if '不可用' in info:
             proxies = ""
-        if url == "":
-            messagebox.showinfo("提示","扫描泄露地址不能为空(且只能选一种模式)！")
+        if url == "" or dict_dir == "":
+            messagebox.showinfo("提示","扫描泄露地址与字典不能为空(且只能选一种模式)！")
         elif isinstance(url,list) == True:
             for i in url:
                 i = i.strip("\n")
@@ -859,6 +870,8 @@ class RootFrom:
                     i = str("http://") + str(i)
                 if str(i[-1]) != "/":
                     i = i +  "/"
+                url_proxy = self.url_proxy_get(input_url)
+                proxies = url_proxy[-1]
                 if Vule == "CVE-2022-22965":
                     self.CVE_2022_22965(i, proxies)
                 elif Vule == "CVE-2022-22963":
