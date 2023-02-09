@@ -402,65 +402,67 @@ class RootFrom:
         proxy = self.proxy_check()
         testurl = "https://www.baidu.com/"
         headers = {"User-Agent": "Mozilla/5.0"}
-        if os.path.isfile(proxy) != True:
-            proxies = proxy.strip("/")
-            if "/" in proxies:
-                proxies = proxies.split("/")[-1]
-            proxies = {
-                        "http": "http://%(proxy)s/" % {'proxy': proxies},
-                        "https": "http://%(proxy)s/" % {'proxy': proxies}
-                        }
-            try:
-                requests.packages.urllib3.disable_warnings()
-                res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
-                if res.status_code == 200:
-                    proxies = proxies
-                    info = "代理正常 {} ".format(proxies)
+        if proxy == "":
+            proxies = ""
+            info = "代理不可用"
+        else:
+            if os.path.isfile(proxy) != True:
+                proxies = proxy.strip("/")
+                if "/" in proxies:
+                    proxies = proxies.split("/")[-1]
+                proxies = {
+                            "http": "http://%(proxy)s/" % {'proxy': proxies},
+                            "https": "http://%(proxy)s/" % {'proxy': proxies}
+                            }
+                try:
+                    requests.packages.urllib3.disable_warnings()
+                    res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
+                    if res.status_code == 200:
+                        proxies = proxies
+                        info = "代理正常 {} ".format(proxies)
+                        self.info_text.insert(tk.INSERT,info)
+                        self.info_text.insert(tk.INSERT, '\n')
+                except:
+                    info = "代理不可用 可更换或添加 {} ".format(proxies)
                     self.info_text.insert(tk.INSERT,info)
                     self.info_text.insert(tk.INSERT, '\n')
-            except:
-                info = "代理不可用 可更换或添加 {} ".format(proxies)
-                self.info_text.insert(tk.INSERT,info)
-                self.info_text.insert(tk.INSERT, '\n')
-                if self.proxy.get() != "":
-                    self.proxy.delete(0,'end')
-        else:
-            proxies = []
-            with open(proxy,"r") as f:
-                proxy_file = f.read().split("\n")
-                for i in proxy_file:
-                    if i != "":
-                        i = i.strip("/")
-                        if "/" in i:
-                            i = i.split("/")[-1]
-                        proxies.append(i)
-            if len(proxies) == len(no_proxies):
-                info = "代理不可用"
-                proxies = ""
+                    if self.proxy.get() != "":
+                        self.proxy.delete(0,'end')
+                    proxies = ""
             else:
-                info = "代理不可用"
-                for i in proxies:
-                    if i in no_proxies:
-                        pass
-                    else:
-                        proxies = {
-                            "http": "http://%(proxy)s/" % {'proxy': i},
-                            "https": "http://%(proxy)s/" % {'proxy': i}
-                            }
-                        try:
-                            requests.packages.urllib3.disable_warnings()
-                            res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
-                            if res.status_code == 200:
-                                proxies = proxies
-                                info = "代理正常 {} ".format(proxies)
-                                self.info_text.insert(tk.INSERT,info)
-                                self.info_text.insert(tk.INSERT, '\n')
-                                break
-                        except:
-                            no_proxies.append(i)
-                            #print(no_proxies)
-                            #self.info_text.insert(tk.INSERT,info)
-                            #self.info_text.insert(tk.INSERT, '\n')
+                proxies = []
+                with open(proxy,"r") as f:
+                    proxy_file = f.read().split("\n")
+                    for i in proxy_file:
+                        if i != "":
+                            i = i.strip("/")
+                            if "/" in i:
+                                i = i.split("/")[-1]
+                            proxies.append(i)
+                if len(proxies) == len(no_proxies):
+                    info = "代理不可用"
+                    proxies = ""
+                else:
+                    info = "代理不可用"
+                    for i in proxies:
+                        if i in no_proxies:
+                            pass
+                        else:
+                            proxies = {
+                                "http": "http://%(proxy)s/" % {'proxy': i},
+                                "https": "http://%(proxy)s/" % {'proxy': i}
+                                }
+                            try:
+                                requests.packages.urllib3.disable_warnings()
+                                res = requests.get(testurl, timeout=10, proxies=proxies, verify=False, headers=headers)
+                                if res.status_code == 200:
+                                    proxies = proxies
+                                    info = "代理正常 {} ".format(proxies)
+                                    self.info_text.insert(tk.INSERT,info)
+                                    self.info_text.insert(tk.INSERT, '\n')
+                                    break
+                            except:
+                                no_proxies.append(i)
         return url,info,proxies
     def info_check(self, urllist, proxies, ua):
         if not os.path.exists("urlout.txt"):
