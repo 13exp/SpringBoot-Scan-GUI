@@ -153,7 +153,7 @@ class RootFrom:
     def vule_info(self):
         webbrowser.open('https://blog.zgsec.cn/index.php/archives/129/')
     def software_info(self):
-        messagebox.showinfo("软件信息","modify by 13exp")
+        messagebox.showinfo("软件信息","write by 13exp")
     def Openfiledir1(self):
         filetypes=[('txt','*.txt'),('all','*.*')]
         path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
@@ -273,6 +273,7 @@ class RootFrom:
             os.remove("vuleLogs.log")
         if os.path.exists("vuleExecLogs.log"):
             os.remove("vuleExecLogs.log")
+        messagebox.showinfo("日志清除","清理完成！")
     def uas(self):
         if self.User_Agent.get() == "Random":
             ua_nums = len(user_agent) - 1
