@@ -424,6 +424,9 @@ class RootFrom:
                 proxy_file = f.read().split("\n")
                 for i in proxy_file:
                     if i != "":
+                        proxies = proxy.strip("/")
+                        if "/" in proxies:
+                            proxies = proxies.split("/")[-1]
                         proxies.append(i)           
             for i in proxies:
                 proxies = {
