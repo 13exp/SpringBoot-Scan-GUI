@@ -1,1 +1,1 @@
-python3 SpringBoot-Scan-GUI.py
+python3 SpringBoot-Scan-GUI-linux.py
