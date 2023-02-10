@@ -1,7 +1,7 @@
 # SpringBoot-Scan-GUI by 13exp
 
 Windows: python SpringBoot-Scan-GUI.py
-        直接执行release文件夹内exe程序
+         直接执行release文件夹内exe程序
 Linux：python3 SpringBoot-Scan-GUI-Linux.py
        wine SpringBoot-Scan-GUI.exe
 
