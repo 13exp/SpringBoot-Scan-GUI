@@ -232,7 +232,7 @@ class RootFrom:
             self.urls.config(state='disable')
         else:
             self.urls.delete(0,'end')
-            path = path.replace('/','\\')
+            path = path.replace('\\','/')
             self.urls.insert('insert',path)
             self.urls.config(state='disable')
     def Openfiledir2(self):
@@ -244,7 +244,7 @@ class RootFrom:
             self.proxy_auto.config(state='disable')
         else:
             self.proxy_auto.delete(0,'end')
-            path = path.replace('/','\\')
+            path = path.replace('\\','/')
             self.proxy_auto.insert('insert',path)
             self.proxy_auto.config(state='disable')
     def Openfiledir3(self):
@@ -255,7 +255,7 @@ class RootFrom:
             self.info_dict.config(state='disable')
         else:
             self.info_dict.delete(0,'end')
-            path = path.replace('/','\\')
+            path = path.replace('\\','/')
             self.info_dict.insert('insert',path)
             self.info_dict.config(state='disable')
     def Openfiledir4(self):
@@ -266,7 +266,7 @@ class RootFrom:
             self.ranks.config(state='disable')
         else:
             self.ranks.delete(0,'end')
-            path = path.replace('/','\\')
+            path = path.replace('\\','/')
             self.ranks.insert('insert',path)
             self.ranks.config(state='disable')
     def Openfiledir5(self):
@@ -277,7 +277,7 @@ class RootFrom:
             self.download.config(state='disable')
         else:
             self.download.delete(0,'end')
-            path = path.replace('/','\\')
+            path = path.replace('\\','/')
             self.download.insert('insert',path)
             self.download.config(state='disable')
     def clear(self):
