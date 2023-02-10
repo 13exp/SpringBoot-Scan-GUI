@@ -1,7 +1,10 @@
 # SpringBoot-Scan-GUI by 13exp
 
-用法Windows: python SpringBoot-Scan-GUI.py或直接执行release文件夹内exe程序
-    Linux：python3 SpringBoot-Scan-GUI-Linux.py或使用wine SpringBoot-Scan-GUI.exe
+Windows: python SpringBoot-Scan-GUI.py
+        直接执行release文件夹内exe程序
+Linux：python3 SpringBoot-Scan-GUI-Linux.py
+       wine SpringBoot-Scan-GUI.exe
+
 Win效果图
 ![KLOK62KIYEIWT%3)3K~DE$P](https://user-images.githubusercontent.com/73600604/217857851-96feb5d2-5bbd-47fd-ae77-b6c72b69b6de.png)
 ![AP1JQI)%_8 V(UYFN6R)(CU](https://user-images.githubusercontent.com/73600604/217857881-5528e4f9-e205-493e-94e3-f0dbfc1b2eaf.jpg)
