@@ -10,7 +10,7 @@ sudo wine SpringBoot-Scan-GUI.exe<br>
 <br>
 vulhub 漏洞测试环境搭建<br>
 git clone https://github.com/vulhub/vulhub.git<br>
-docker install<br>
+[docker install command]<br>
 sudo apt-get install docker.io<br>
 sudo apt install docker-compose<br><br>
 CVE-2022-22965<br>
