@@ -1128,4 +1128,5 @@ if __name__ == '__main__':
     if os.geteuid() == 0:
         start = RootFrom()
     else:
+        print("请以root身份运行!")
         sys.exit(1)
