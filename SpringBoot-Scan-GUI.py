@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 # coding=utf-8
-import webbrowser, sys, json, re, os, random, shutil
+import webbrowser, sys, json, re, os, random, shutil, ctypes
+import nmap
 import urllib3, requests
 import tkinter as tk
 from threading import Thread
 from time import sleep, strftime, localtime
 from tkinter import messagebox, filedialog, ttk
 from tkinter.filedialog import askdirectory
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 class RootFrom:
     def __init__(self):
         global user_agent
@@ -28,7 +34,7 @@ class RootFrom:
            \$$                                \$$$$$$                                        
             ______                                                                           
            /      \                                                                             
-          |  $$$$$$\  _______  ______   _______       SpringBootScan-GUI Version: 1.2.1
+          |  $$$$$$\  _______  ______   _______       SpringBootScan-GUI Version: 1.2.2
           | $$___\$$ /       \|      \ |       \    +----------------------------------+ 
            \$$    \ |  $$$$$$$ \$$$$$$\| $$$$$$$\   + 图形化 by:  →13exp←            + 
            _\$$$$$$\| $$      /      $$| $$  | $$   + https://github.com/13exp/        + 
@@ -109,6 +115,7 @@ class RootFrom:
         tk.Button(self.root,text="泄露下载",command=self.dumpinfo).place(x=210,y=390)
         tk.Button(self.root,text="全部清除",command=self.clear).place(x=280,y=390)
         tk.Button(self.root,text="执行",command=self.CVE_2022_22965_Exec).place(x=300,y=255)
+        tk.Button(self.root,text="识别",command=self.nmap_scan).place(x=300,y=315)
         # 反馈框
         self.vbar = ttk.Scrollbar(self.root)
         self.info_text = tk.Text(self.root,width=95,height=33,yscrollcommand=self.vbar.set)
@@ -148,6 +155,7 @@ class RootFrom:
         menu_get.add_command(label='利用姿势',command=self.vule_info)
         menu_get.add_command(label='FafaViewer',command=self.fofa_viewer)
         menu_get.add_command(label='MoreVules',command=self.more_vules)
+        menu_get.add_command(label='nmap',command=self.nmap_download)
         def Menu_Right(event):
             global right
             menu_right.post(event.x_root,event.y_root)
@@ -192,6 +200,7 @@ class RootFrom:
         right_more.add_command(label='利用姿势',command=self.vule_info)
         right_more.add_command(label='FafaViewer',command=self.fofa_viewer)
         right_more.add_command(label='MoreVules',command=self.more_vules)
+        right_more.add_command(label='nmap',command=self.nmap_download)
         self.root.bind("<Control-q>",Scan_Right)
         self.root.bind("<Control-Q>",Scan_Right)
         self.root.bind("<Control-r>",Vule_Right)
@@ -224,6 +233,8 @@ class RootFrom:
         webbrowser.open('https://github.com/hongyan454/SpringBootVulExploit')
     def software_info(self):
         messagebox.showinfo("软件信息","write by 13exp")
+    def nmap_download(self):
+        webbrowser.open('https://nmap.org/download.html#windows')
     def Openfiledir1(self):
         filetypes=[('txt','*.txt'),('all','*.*')]
         path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
@@ -643,6 +654,36 @@ class RootFrom:
     def dumpinfo(self):
         try:
             threadDumpInfo = Thread(target=self.DumpInfo)
+            threadDumpInfo.start()
+        except KeyboardInterrupt:
+            messagebox.showinfo('Info','interrupted by user, killing all threads...')
+    def Nmap_Scan(self):
+        title = '*+*+*+*+*+*+*+*+*+*+*+*+*+*正在进行-系统识别*+*+*+*+*+*+*+*+*+*+*+*+*+*'
+        self.info_text.insert(tk.INSERT,title)
+        self.info_text.insert(tk.INSERT, '\n') 
+        ip = self.rank.get().strip("\n")
+        if "http://" in ip or "https://" in ip:
+            ip = ip.split("/")[2]
+        if ":" in ip:
+            ip = ip.split(":")[0]
+        nm = nmap.PortScanner()    
+        try:
+            result = nm.scan(hosts=ip,arguments='-O')
+            win = str(result).count("Windows")
+            linux = str(result).count("Linux")
+            if win > linux:
+                os = "Windows"
+            else:
+                os = "Linux"
+            tar = '[+]target ' + ip + " OS is " + os
+            self.info_text.insert(tk.INSERT,tar)
+            self.info_text.insert(tk.INSERT, '\n') 
+        except:
+            pass
+        return os
+    def nmap_scan(self):
+        try:
+            threadDumpInfo = Thread(target=self.Nmap_Scan)
             threadDumpInfo.start()
         except KeyboardInterrupt:
             messagebox.showinfo('Info','interrupted by user, killing all threads...')
@@ -1088,4 +1129,7 @@ class Fofa_from:
         tk.Label(self.root,text='网页内容识别：body="Whitelabel Error Page"').place(x=10,y=40)
         self.root.resizable(0,0)
 if __name__ == '__main__':
-    start = RootFrom()
+    if is_admin():
+        start = RootFrom()
+    else:
+        ctypes.windll.shell32.ShellExecuteW(None,"runas", sys.executable, __file__, None, 1)
