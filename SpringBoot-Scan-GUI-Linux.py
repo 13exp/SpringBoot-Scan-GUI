@@ -8,11 +8,6 @@ from threading import Thread
 from time import sleep, strftime, localtime
 from tkinter import messagebox, filedialog, ttk
 from tkinter.filedialog import askdirectory
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
 class RootFrom:
     def __init__(self):
         global user_agent
@@ -56,7 +51,7 @@ class RootFrom:
         no_proxies = []
         proxy_list = []
         self.root = tk.Tk()
-        self.root.title("SpringBoot-Scan-GUI-Linux")
+        self.root.title("SpringBoot-Scan-GUI")
         self.root.geometry("1024x439")
         self.root.resizable(0,0)
         # 泄露扫描
@@ -980,6 +975,8 @@ class RootFrom:
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
+        cmdlist = execcmd.split(" ")
+        execcmd = execcmd = "\"" + "\", \"".join(cmdlist) + "\""
         if self.log_var.get() == "启用":
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
@@ -992,7 +989,6 @@ class RootFrom:
             'User-Agent': ua,
             'Content-Type': 'application/json'
         }
-
         headers2 = {
             'User-Agent': ua,
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -1129,7 +1125,7 @@ class Fofa_from:
         tk.Label(self.root,text='网页内容识别：body="Whitelabel Error Page"').place(x=10,y=40)
         self.root.resizable(0,0)
 if __name__ == '__main__':
-    if is_admin():
+    if os.geteuid() == 0:
         start = RootFrom()
     else:
-        ctypes.windll.shell32.ShellExecuteW(None,"runas", sys.executable, __file__, None, 1)
+        sys.exit(1)

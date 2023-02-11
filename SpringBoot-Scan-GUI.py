@@ -980,6 +980,8 @@ class RootFrom:
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
+        cmdlist = execcmd.split(" ")
+        execcmd = execcmd = "\"" + "\", \"".join(cmdlist) + "\""
         if self.log_var.get() == "启用":
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
@@ -992,7 +994,6 @@ class RootFrom:
             'User-Agent': ua,
             'Content-Type': 'application/json'
         }
-
         headers2 = {
             'User-Agent': ua,
             'Content-Type': 'application/x-www-form-urlencoded'
