@@ -980,8 +980,11 @@ class RootFrom:
         tar = '[+]target ' + url
         self.info_text.insert(tk.INSERT,tar)
         self.info_text.insert(tk.INSERT, '\n')
-        cmdlist = execcmd.split(" ")
-        execcmd = execcmd = "\"" + "\", \"".join(cmdlist) + "\""
+        if "bash" in execcmd:
+            cmdlist = execcmd.split(" ")
+            execcmd = "\"" + "\", \"".join(cmdlist) + "\""
+        else:
+            execcmd = execcmd
         if self.log_var.get() == "启用":
             with open("vuleLogs.log","a") as f:
                 f.write(tar + '   ' + strftime("%Y-%m-%d %H:%M:%S",localtime()))
