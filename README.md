@@ -6,8 +6,23 @@ python SpringBoot-Scan-GUI.py<br>
 <br>
 Linux:<br>
 python3 SpringBoot-Scan-GUI-Linux.py<br>
-wine SpringBoot-Scan-GUI.exe<br>
+sudo wine SpringBoot-Scan-GUI.exe<br>
 <br>
+vulhub 漏洞测试环境搭建<br>
+git clone https://github.com/vulhub/vulhub.git<br>
+docker install<br>
+sudo apt-get install docker.io<br>
+sudo apt install docker-compose<br>
+CVE-2022-22965<br>
+cd /vulhub/CVE-2022-22965<br>
+sudo docker-compose -up -d<br>
+CVE-2022-22963<br>
+cd /vulhub/CVE-2022-22963<br>
+sudo docker-compose -up -d<br>
+CVE-2022-22947<br>
+cd /vulhub/CVE-2022-22947<br>
+sudo docker-compose -up -d<br>
+如果报错，自行修改.yml中映射的端口号<br>
 Win使用效果图<br>
 CVE-2022-22965<br>
 vulhub<br>
