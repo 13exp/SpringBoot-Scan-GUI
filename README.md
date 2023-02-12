@@ -117,7 +117,14 @@ Kali监听对应端口：
 
 #### 春秋云境 环境复现
 
-![image](https://user-images.githubusercontent.com/73600604/218236995-3ac37c9f-f7e6-478a-a72d-f7951c547047.png)
+注:云境反弹shell需使用公网服务器
+
+服务器监听
+![image](https://user-images.githubusercontent.com/73600604/218291287-9b248ffa-f4fe-4195-b665-ba333aa5721c.png)
+
+![image](https://user-images.githubusercontent.com/73600604/218291341-66317042-a214-48dd-81c8-59bd22ac7a02.png)
+![image](https://user-images.githubusercontent.com/73600604/218291366-7eb7e58b-54ca-4d72-bd0e-f6bc6fa4367f.png)
+
 
 ### 三、CVE-2022-22947
 
