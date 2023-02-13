@@ -47,7 +47,7 @@ class RootFrom:
       "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
       "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0",
       "Opera/9.80 (Windows NT 5.1; U; zh-sg) Presto/2.9.181 Version/12.00")
-        cves = ("CVE-2022-22965","CVE-2022-22963","CVE-2022-22947","22965-13exp-shell","22965-aabyss-linux-post","22965-aabyss-win-post","22965-aabyss-shell-get")
+        cves = ("22965-aabyss-linux-post","CVE-2022-22965","CVE-2022-22963","CVE-2022-22947","22965-13exp-shell","22965-aabyss-win-post","22965-aabyss-shell-get")
         no_proxies = []
         proxy_list = []
         self.root = tk.Tk()
