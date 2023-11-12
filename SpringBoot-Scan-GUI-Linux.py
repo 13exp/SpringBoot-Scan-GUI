@@ -223,7 +223,7 @@ class RootFrom:
     def shell_info(self):
         messagebox.showinfo("CVE-2022-22965 Shell信息","CVE-2022-22965     :    shell.jsp?cmd=whoami\n22965-13exp-shell :    wbexp.jsp?pwd=13exp&cmd=whoami\n22965-aabyss-shell:    tomcatwar.jsp?pwd=aabysszg&cmd=whoami")
     def vule_info(self):
-        webbrowser.open('https://blog.zgsec.cn/index.php/archives/129/')
+        webbrowser.open('https://blog.zgsec.cn/archives/129.html')
     def fofa_viewer(self):
         webbrowser.open('https://github.com/wgpsec/fofa_viewer')
     def more_vules(self):
