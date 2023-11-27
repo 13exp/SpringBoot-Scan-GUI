@@ -1,0 +1,12 @@
+{
+    "switch": 0,
+    "type": [
+        "unkown",
+        "HTTP",
+        "SOCK5"
+    ],
+    "ip": "127.0.0.1",
+    "port": "8081",
+    "user": "",
+    "passwd": ""
+}

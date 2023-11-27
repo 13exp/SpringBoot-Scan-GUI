@@ -1,0 +1,56 @@
+{
+    "vulns": {
+        "pocList": [
+            "CVE-2021-21234",
+            "CVE-2022-22947",
+            "CVE-2022-22963",
+            "CVE-2022-22965",
+            "JeeSpring-2023",
+            "JolokiaRCE",
+            "SnakeYAML-RCE"
+        ],
+        "expList": [
+            "CVE-2022-22947",
+            "CVE-2022-22963",
+            "CVE-2022-22965",
+            "JeeSpring-2023",
+            "JolokiaRCE",
+            "SnakeYAML-RCE"
+        ]
+    },
+    "model": {
+        "standmodel": [
+            "py",
+            "json",
+            "yaml"
+        ],
+        "asyncmodel": "async"
+    },
+    "path": {
+        "standpath": {
+            "CVE-2021-21234": "./vuls/CVE_2021_21234",
+            "CVE-2022-22947": "./vuls/CVE_2022_22947",
+            "CVE-2022-22963": "./vuls/CVE_2022_22963",
+            "CVE-2022-22965": "./vuls/CVE_2022_22965",
+            "JeeSpring-2023": "./vuls/JeeSpring_2023",
+            "JolokiaRCE": "./vuls/JeeSpring_2023",
+            "nakeYAMLRCE": "./vuls/SnakeYAML_RCE"
+        },
+        "asyncpath": {
+            "CVE-2021-21234": "./vuls/CVE_2021_21234_Async.py",
+            "CVE-2022-22947": "./vuls/CVE_2022_22947_Async.py",
+            "CVE-2022-22963": "./vuls/CVE_2022_22963_Async.py",
+            "CVE-2022-22965": "./vuls/CVE_2022_22965_Async.py",
+            "JeeSpring-2023": "./vuls/JeeSpring_2023_Async.py",
+            "JolokiaRCE": "./vuls/JeeSpring_2023_Async.py",
+            "nakeYAMLRCE": "./vuls/SnakeYAML_RCE_Async.py"
+        }
+    },
+    "modelSet": "py",
+    "expTypes": [
+        "default",
+        "aabysszg",
+        "13EXP"
+    ],
+    "expType": "aabysszg"
+}

@@ -1,0 +1,7 @@
+{
+    "switch": 0,
+    "scanlog_path": "./logs/urls.log",
+    "vulnlog_path": "./logs/vuln.log",
+    "dumplog_path": "./logs/dump.log",
+    "errorlog_path": "./logs/error.log"
+}
