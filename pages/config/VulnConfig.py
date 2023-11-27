@@ -63,11 +63,11 @@ class VulnConfig:
     },
     "modelSet": "py",
     "expTypes": [
-            "defualt",
+            "default",
             "aabysszg",
             "13EXP"
         ],
-    "expType": "defualt"
+    "expType": "default"
 }
             self.config.JsonWrite(data,path)
     def page(self):
