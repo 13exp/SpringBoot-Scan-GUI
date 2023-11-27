@@ -15,11 +15,14 @@ from util import SystemCheck
 
 class SpringBootScanGUI:
     def __init__(self):
+        systype = SystemCheck.SystemType()
+        
         self.window = Tk()
         self.window.title("SpringBootScanGUI   by:13EXP")
         self.window.geometry("1230x600")
         self.window.resizable(0, 0)
-        self.window.iconbitmap('./images/gui.ico')
+        if systype == 'Windows':
+            self.window.iconbitmap('./images/gui.ico')
 
         tabControl = ttk.Notebook(self.window)
         
