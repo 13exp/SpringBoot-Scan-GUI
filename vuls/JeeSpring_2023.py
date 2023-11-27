@@ -50,5 +50,5 @@ class JeeSpring_2023:
         except Exception as e:
             error = f"[error] {url} 未知错误 {e}"
             return error
-    def exp(self,url,proxies,ProxyStute):
+    def exp(self,url,proxies,ProxyStute,cmd):
         pass

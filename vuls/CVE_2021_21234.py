@@ -35,6 +35,6 @@ class CVE_2021_21234:
         except Exception as e:
             error = f"[error] {url} 未知错误 {e}"
             return error
-    def exp(self,url,proxies,ProxyStute):
+    def exp(self,url,proxies,ProxyStute,cmd):
         # 目录遍历不存在EXP
         pass
