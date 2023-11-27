@@ -133,7 +133,7 @@ class core:
         vulnPath = vulnPathDict[vulnName] + "." + model
         data = self.JsonOrYamlData(vulnPath)
         dataload = self.YamlOrJsonModel(data)
-    def pyScan(self,url,proxies,vulnName,ProxyStute,attack):
+    def pyScan(self,url,proxies,vulnName,ProxyStute,attack,cmd):
         if attack == "PoC":
             if vulnName == "CVE-2021-21234":
                 result = self.CVE_2021_21234.poc(url,proxies,ProxyStute)
@@ -154,19 +154,19 @@ class core:
             return result
         elif attack == "EXP":
             if vulnName == "CVE-2021-21234":
-                result = self.CVE_2021_21234.exp(url,proxies,ProxyStute)
+                result = self.CVE_2021_21234.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "CVE-2022-22947":
-                result = self.CVE_2022_22947.exp(url,proxies,ProxyStute)
+                result = self.CVE_2022_22947.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "CVE-2022-22963":
-                result = self.CVE_2022_22963.exp(url,proxies,ProxyStute)
+                result = self.CVE_2022_22963.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "CVE-2022-22965":
-                result = self.CVE_2022_22965.exp(url,proxies,ProxyStute)
+                result = self.CVE_2022_22965.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "JeeSpring-2023":
-                result = self.JeeSpring_2023.exp(url,proxies,ProxyStute)
+                result = self.JeeSpring_2023.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "JolokiaRCE":
-                result = self.JolokiaRCE.exp(url,proxies,ProxyStute)
+                result = self.JolokiaRCE.exp(url,proxies,ProxyStute,cmd)
             elif vulnName == "SnakeYAML-RCE":
-                result = self.SnakeYAML_RCE.exp(url,proxies,ProxyStute)
+                result = self.SnakeYAML_RCE.exp(url,proxies,ProxyStute,cmd)
             else:
                 result = "Error"
             return result
