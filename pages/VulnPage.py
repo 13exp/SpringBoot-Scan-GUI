@@ -146,7 +146,7 @@ class VulnPage:
 
         ua = self.User_Agent_EXP.get()
         poc = self.info_pocs.get()
-
+        cmd = self.cmd_exp.get()
         pymodel = self.standmodel[0]
         jsonmodel = self.standmodel[1]
         yamlmodel = self.standmodel[2]
@@ -170,7 +170,7 @@ class VulnPage:
             if model == pymodel:
                 for i in List_Url:
                     try:
-                        data = self.core.pyScan(i,proxies,poc,ProxyStute,attack)
+                        data = self.core.pyScan(i,proxies,poc,ProxyStute,attack,cmd)
                         self.info_text_poc.insert(tk.INSERT, data)
                         self.info_text_poc.insert(tk.INSERT, '\n')
                     except Exception as e:
@@ -238,7 +238,7 @@ class VulnPage:
 
         ua = self.User_Agent_EXP.get()
         exp = self.info_exps.get()
-
+        cmd = self.cmd_exp.get()
         if ua == "自动":
             ua = self.ua.UserAgent()
         check = self.EXPInputCheck()
@@ -257,7 +257,7 @@ class VulnPage:
                 List_Url.append(url)
             if model == pymodel:
                 for i in List_Url:
-                    data = self.core.pyScan(i,proxies,exp,ProxyStute,attack)
+                    data = self.core.pyScan(i,proxies,exp,ProxyStute,attack,cmd)
                     self.info_text_exp.insert(tk.INSERT, data)
                     self.info_text_exp.insert(tk.INSERT, '\n')
                     if logSwitch == 1:
@@ -287,14 +287,14 @@ class VulnPage:
         except Exception as e:
             messagebox.showinfo('error', f'unkown error\n{e}')
     def btnEXP(self):
-        # try:
-        #     threadFofa = threading.Thread(target=self.EXP)
-        #     threadFofa.setDaemon(True)
-        #     threadFofa.start()
-        #     # threadFofa.join()
-        # except Exception as e:
-        #     messagebox.showinfo('error', f'unkown error\n{e}')
-       messagebox.showinfo("提示","因不可抗因素，功能未开放······")
+        try:
+            threadFofa = threading.Thread(target=self.EXP)
+            threadFofa.setDaemon(True)
+            threadFofa.start()
+            # threadFofa.join()
+        except Exception as e:
+            messagebox.showinfo('error', f'unkown error\n{e}')
+       # messagebox.showinfo("提示","因不可抗因素，功能未开放······")
     def PoCInputCheck(self):
         check = InputCheck.InputCheck()
         url = self.pocurl.get()
