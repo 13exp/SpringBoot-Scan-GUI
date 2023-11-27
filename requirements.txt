@@ -1,3 +1,0 @@
-urllib3
-requests
-python-nmap
