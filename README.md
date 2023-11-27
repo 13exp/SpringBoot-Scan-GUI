@@ -2,29 +2,17 @@
 
 开源工具 [SpringBoot-Scan](https://github.com/AabyssZG/SpringBoot-Scan) 的GUI图形化版本，对你有用的话麻烦点个Star哈哈~
 
-![GUI](https://github.com/AabyssZG/SpringBoot-Scan/raw/main/pic/GUI.png)
+![GUI](https://github.com/13exp/SpringBoot-Scan-GUI/assets/73600604/39082ed2-8907-499a-a86f-8bce3ad52cd6)
+
 
 **注意：本工具内置相关漏洞的Exp，杀软报毒属于正常现象！**
 
-## Windows使用
+## 新版本工具使用
 
 ```
-python3 SpringBoot-Scan-GUI.py
+python3 main.py
 ```
 
-也可以直接下载执行release打包好的exe程序
-
-## Linux使用
-
-```
-python3 SpringBoot-Scan-GUI-Linux.py
-```
-
-或者使用 `wine` 来执行：
-
-```
-sudo wine SpringBoot-Scan-GUI.exe
-```
 
 ## VulHub 漏洞测试环境搭建
 
