@@ -12,10 +12,7 @@
         "expList": [
             "CVE-2022-22947",
             "CVE-2022-22963",
-            "CVE-2022-22965",
-            "JeeSpring-2023",
-            "JolokiaRCE",
-            "SnakeYAML-RCE"
+            "CVE-2022-22965"
         ]
     },
     "model": {
@@ -52,5 +49,5 @@
         "aabysszg",
         "13EXP"
     ],
-    "expType": "aabysszg"
+    "expType": "13EXP"
 }
