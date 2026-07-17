@@ -65,4 +65,4 @@ if __name__ == '__main__':
         else:
             print(False)
     else:
-        print('Faild Start Process...Please try agine!')'''
+        print('Failed Start Process...Please try agine!')'''
