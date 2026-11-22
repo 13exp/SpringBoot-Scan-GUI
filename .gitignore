@@ -1,0 +1,3 @@
+__pycache__/
+*.pyc
+config/lang.json

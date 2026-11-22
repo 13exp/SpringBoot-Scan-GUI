@@ -2,6 +2,8 @@
 
 import os,re
 
+from util.Translate import tr
+
 class InputCheck:
     def isNull(self,check):
         if check == "":
@@ -21,7 +23,7 @@ class InputCheck:
         else:
             return False
     def UserAgent(self,check):
-        if check == "自动":
+        if check == tr("common.auto"):
             return True
         else:
             return False

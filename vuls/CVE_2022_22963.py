@@ -2,6 +2,7 @@
 
 import requests
 from util import RandomUA
+from util.Translate import tr
 
 class CVE_2022_22963:
     def __init__(self):
@@ -35,13 +36,13 @@ class CVE_2022_22963:
             text = req.text
             rsp = '"error":"Internal Server Error"'
             if code == 500 and rsp in text:
-                result = f'[+] {url} 存在编号为CVE-2022-22963的RCE漏洞，执行命令\n{cmd}'
+                result = tr("v.22963.found", url=url, cmd=cmd)
                 return result
             else:
-                result = f'[-] {url} CVE-2022-22963漏洞不存在'
+                result = tr("v.22963.none", url=url)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
 
     def exp(self,url,proxies,ProxyStute,cmd):

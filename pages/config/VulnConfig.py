@@ -5,6 +5,7 @@ from tkinter import ttk, messagebox, filedialog
 import tkinter.font as tkFont
 
 from util import JsonMethod, SystemCheck
+from util.Translate import tr
 
 class VulnConfig:
     def __init__(self):
@@ -73,7 +74,7 @@ class VulnConfig:
     def page(self):
         self.configinit(self.vulnspath)
         self.window = Toplevel(name='vulnscan')
-        self.window.title("漏扫设置")
+        self.window.title(tr("cfg.vuln_title"))
         self.window.geometry("500x480")
         self.window.resizable(0, 0)
 
@@ -107,7 +108,7 @@ class VulnConfig:
             self.model.current(self.models.index(self.modelSet))
         except:
             self.window.destroy()
-            return messagebox.showerror("错误", "model load error!\nYou can delete the vulns.json and try again!")
+            return messagebox.showerror(tr("common.error"), "model load error!\nYou can delete the vulns.json and try again!")
         self.model.place(x=90, y=37)
 
         Label(self.window, text="expType:", fg="black", font=("宋体", 12)).place(x=17, y=10)
@@ -117,7 +118,7 @@ class VulnConfig:
             self.types.current(self.expTypes.index(self.expType))
         except:
             self.window.destroy()
-            return messagebox.showerror("错误", "types load error!\nYou can delete the vulns.json and try again!")
+            return messagebox.showerror(tr("common.error"), "types load error!\nYou can delete the vulns.json and try again!")
         self.types.place(x=90, y=10)
 
         Label(self.window, text="PoC:", fg="black", font=("宋体", 12)).place(x=20, y=60)
@@ -148,12 +149,12 @@ class VulnConfig:
         self.addvulnPath_entry.place(x=70, y=380)
         self.addvulnPath_entry.bind("<Button-1>",self.vulnPath)
 
-        self.AddVuln = Button(self.window, text="新增", font=tkFont.Font(size=12), width=9, command=self.addVuln,
+        self.AddVuln = Button(self.window, text=tr("cfg.vuln_add"), font=tkFont.Font(size=12), width=9, command=self.addVuln,
                              height=2, fg="white", bg="gray", activeforeground="white", activebackground="black",
                              cursor="hand2")
         self.AddVuln.place(x=390, y=350)
 
-        self.Delpoc = Button(self.window, text="删除", font=tkFont.Font(size=10), width=9, command=self.delpoc,
+        self.Delpoc = Button(self.window, text=tr("common.delete"), font=tkFont.Font(size=10), width=9, command=self.delpoc,
                              height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                              cursor="hand2")
         self.Delpoc.place(x=160, y=310)
@@ -175,7 +176,7 @@ class VulnConfig:
         #                      cursor="hand2")
         # self.Addexp.place(x=320, y=410)
 
-        self.Delexp = Button(self.window, text="删除", font=tkFont.Font(size=10), width=9, command=self.delexp,
+        self.Delexp = Button(self.window, text=tr("common.delete"), font=tkFont.Font(size=10), width=9, command=self.delexp,
                              height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                              cursor="hand2")
         self.Delexp.place(x=400, y=310)
@@ -186,11 +187,11 @@ class VulnConfig:
         #     self.standpathget[i] = ""
         #     self.asyncpathget[i] = ""
 
-        Button(self.window, text="保存", font=tkFont.Font(size=12), width=9, command=self.update,
+        Button(self.window, text=tr("common.save"), font=tkFont.Font(size=12), width=9, command=self.update,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=140, y=420)
 
-        Button(self.window, text="取消", font=tkFont.Font(size=12), width=9, command=self.window.destroy,
+        Button(self.window, text=tr("common.cancel"), font=tkFont.Font(size=12), width=9, command=self.window.destroy,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=260, y=420)
 
@@ -228,7 +229,7 @@ class VulnConfig:
             self.poclist_info.insert(INSERT, pocs)
             self.poclist_info.config(state="disable")
         except:
-            messagebox.showerror("错误","未知错误")
+            messagebox.showerror(tr("common.error"),tr("common.unknown_error"))
             self.poclist_info.config(state="disable")
     def delexp(self):
         try:
@@ -246,11 +247,11 @@ class VulnConfig:
             self.explist_info.insert(INSERT, exps)
             self.explist_info.config(state="disable")
         except:
-            messagebox.showerror("错误","未知错误")
+            messagebox.showerror(tr("common.error"),tr("common.unknown_error"))
             self.explist_info.config(state="disable")
     def dirsPath(self,entry):
         filetypes=[('py','*.py'),('yaml','*.yaml'),('json','*.json'),('all','*.*')]
-        path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
+        path = filedialog.askopenfilename(title=tr("common.file_select"),filetypes=filetypes)
         # systype
         if self.sysType == "Windows":
             # windows
@@ -284,7 +285,7 @@ class VulnConfig:
         else:
             self.explist_info.config(state="disable")
             self.poclist_info.config(state="disable")
-            return messagebox.showerror("错误","空值或重复的键值")
+            return messagebox.showerror(tr("common.error"),tr("cfg.vuln_dup"))
         self.poc['value'] = self.poclist
         self.poc.current(0)
         self.exp['value'] = self.explist
@@ -328,4 +329,4 @@ class VulnConfig:
 }
         self.config = JsonMethod.JsonMethod()
         self.config.JsonWrite(data, self.vulnspath)
-        messagebox.showinfo("更新", "更新成功！")
+        messagebox.showinfo(tr("common.update"), tr("common.update_success"))

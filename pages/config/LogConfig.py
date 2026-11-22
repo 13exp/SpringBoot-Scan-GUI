@@ -6,6 +6,7 @@ import tkinter.font as tkFont
 import os
 
 from util import JsonMethod
+from util.Translate import tr
 
 class LogConfig:
     def __init__(self):
@@ -28,12 +29,12 @@ class LogConfig:
         logconfig = self.config.JsonRead(self.logpath)
         
         self.window = Toplevel(name='log')
-        self.window.title("日志设置")
+        self.window.title(tr("cfg.log_title"))
         self.window.geometry("400x240")
         self.window.resizable(0, 0)
         
         self.status_var = StringVar(self.window)
-        self.proxy_status = ttk.Checkbutton(self.window,variable=self.status_var,text="启用",onvalue=1,offvalue=0,cursor="hand2",command=self.switchCheck)
+        self.proxy_status = ttk.Checkbutton(self.window,variable=self.status_var,text=tr("common.enable"),onvalue=1,offvalue=0,cursor="hand2",command=self.switchCheck)
         self.proxy_status.place(x=160,y=20)
         self.status_var.set(logconfig['switch'])
 
@@ -66,11 +67,11 @@ class LogConfig:
         self.errorlog_path.insert('insert', logconfig['errorlog_path'])
 
         # 保存与取消
-        Button(self.window, text="保存", font=tkFont.Font(size=12), width=9, command=self.update,
+        Button(self.window, text=tr("common.save"), font=tkFont.Font(size=12), width=9, command=self.update,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=50, y=190)
 
-        Button(self.window, text="取消", font=tkFont.Font(size=12), width=9, command=self.window.destroy,
+        Button(self.window, text=tr("common.cancel"), font=tkFont.Font(size=12), width=9, command=self.window.destroy,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=240, y=190)
 
@@ -92,7 +93,7 @@ class LogConfig:
                 }
         self.config = JsonMethod.JsonMethod()
         self.config.JsonWrite(data,self.logpath)
-        messagebox.showinfo("更新","更新成功！")
+        messagebox.showinfo(tr("common.update"),tr("common.update_success"))
     def switchCheck(self):
         switch = int(self.status_var.get())
         if switch == 0:

@@ -23,6 +23,8 @@ from vuls import JolokiaRCE_Async
 from vuls import JeeSpring_2023_Async
 from vuls import SnakeYAML_RCE_Async
 
+from util.Translate import tr
+
 class core:
     def __init__(self):
         self.sysType = SystemCheck.SystemType()
@@ -80,17 +82,17 @@ class core:
             if 'info' in data and 'description' in data['info'] and data['info']['description'] != None:
                 self.explain.append(data['info']['description'])
             else:
-                self.explain.append("未定义")
+                self.explain.append(tr("core.undef"))
 
             if 'time' in data:
                 self.time.append(data['time'])
             else:
-                self.time.append("未定义")
+                self.time.append(tr("core.undef"))
 
             if 'body' in (data['http'])[0]:
                 self.body.append(((data['http'])[0])['body'])
             else:
-                self.body.append("占位符2")
+                self.body.append(tr("core.undef"))
 
             if 'Rheader' in (data['http'])[0]:
                 self.Rheader.append(((data['http'])[0])['Rheader'])
@@ -117,7 +119,7 @@ class core:
             self.match.append((((data['http'])[0])['matchers']))
             return True
         except Exception as e:
-            return f"数据载入错误 {e}"
+            return tr("core.load_err", e=e)
     def YamlOrJsonRequest(self,vulnName,model):
         vulns = self.jsonRead.VulnsConfigRead()
         vulnPathDict = vulns["path"]["standpath"]
