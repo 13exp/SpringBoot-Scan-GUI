@@ -8,6 +8,7 @@ import os
 from util import JsonMethod
 from util import ProxyCheck
 from util import SystemCheck
+from util.Translate import tr
 
 class ProxyConfig:
     def __init__(self):
@@ -32,7 +33,7 @@ class ProxyConfig:
         self.configinit(self.proxypath)
         
         self.window = Toplevel(name='proxy')
-        self.window.title("代理设置")
+        self.window.title(tr("cfg.proxy_title"))
         self.window.geometry("400x340")
         self.window.resizable(0, 0)
 
@@ -40,7 +41,7 @@ class ProxyConfig:
         proxyconfig = self.config.JsonRead(self.proxypath)
 
         self.status_var = StringVar(self.window)
-        self.proxy_status = ttk.Checkbutton(self.window,variable=self.status_var,text="启用",onvalue=1,offvalue=0,cursor="hand2",command=self.switchCheck)
+        self.proxy_status = ttk.Checkbutton(self.window,variable=self.status_var,text=tr("common.enable"),onvalue=1,offvalue=0,cursor="hand2",command=self.switchCheck)
         self.proxy_status.place(x=160,y=20)
         self.status_var.set(proxyconfig['switch'])
 
@@ -78,24 +79,24 @@ class ProxyConfig:
         self.passwd_entry.delete(0, 'end')
         self.passwd_entry.insert('insert', proxyconfig['passwd'])
         # 保存与取消
-        self.checkBtn = Button(self.window, text="检查", font=tkFont.Font(size=12), width=9, command=self.proxycheck,
+        self.checkBtn = Button(self.window, text=tr("common.check"), font=tkFont.Font(size=12), width=9, command=self.proxycheck,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2")
         self.checkBtn.place(x=50, y=210)
-        
-        Button(self.window, text="保存", font=tkFont.Font(size=12), width=9, command=self.update,
+
+        Button(self.window, text=tr("common.save"), font=tkFont.Font(size=12), width=9, command=self.update,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=150, y=210)
-        
-        Button(self.window, text="取消", font=tkFont.Font(size=12), width=9, command=self.window.destroy,
+
+        Button(self.window, text=tr("common.cancel"), font=tkFont.Font(size=12), width=9, command=self.window.destroy,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=250, y=210)
 
-        Label(self.window, text="代理清洗:", fg="black", font=("宋体", 12)).place(x=20, y=260)
+        Label(self.window, text=tr("cfg.proxy_clean_label"), fg="black", font=("宋体", 12)).place(x=20, y=260)
         self.file_entry = Entry(self.window, width=22, font=tkFont.Font(size=12), bg='Ivory',cursor="hand2")
         self.file_entry.place(x=120, y=260)
         self.file_entry.bind("<Button-1>",self.filedir)
-        self.btnClear = Button(self.window, text="清洗", font=tkFont.Font(size=12), width=9, command=self.proxycheckfile,
+        self.btnClear = Button(self.window, text=tr("cfg.proxy_clean"), font=tkFont.Font(size=12), width=9, command=self.proxycheckfile,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2")
         self.btnClear.place(x=150, y=290)
@@ -119,12 +120,12 @@ class ProxyConfig:
                 }
         self.config = JsonMethod.JsonMethod()
         self.config.JsonWrite(data,self.proxypath)
-        messagebox.showinfo("更新","更新成功！")
+        messagebox.showinfo(tr("common.update"),tr("common.update_success"))
     def filedir(self,event):
         self.dirsPath(self.file_entry)
     def dirsPath(self,entry):
         filetypes=[('txt','*.txt'),('all','*.*')]
-        path = filedialog.askopenfilename(title='文件选择',filetypes=filetypes)
+        path = filedialog.askopenfilename(title=tr("common.file_select"),filetypes=filetypes)
         # systype
         if self.sysType == "Windows":
             # windows
@@ -146,7 +147,7 @@ class ProxyConfig:
         file = self.file_entry.get()
         check = ProxyCheck.ProxyCheck()
         check.checkfile(file)
-        messagebox.showinfo("提示",f"代理清洗成功已保存至 {file} ")
+        messagebox.showinfo(tr("common.info"),tr("cfg.proxy_clean_ok", file=file))
         self.btnClear.config(state="normal")
     def proxycheck(self):
         ip = self.ip_entry.get()
@@ -155,9 +156,9 @@ class ProxyConfig:
         check = ProxyCheck.ProxyCheck()
         useful = check.checkurl(proxy)
         if useful != False:
-            messagebox.showinfo("提示","代理可用！")
+            messagebox.showinfo(tr("common.info"),tr("cfg.proxy_ok"))
         else:
-            messagebox.showerror("错误","代理不可用！")
+            messagebox.showerror(tr("common.error"),tr("cfg.proxy_bad"))
     def switchCheck(self):
         switch = int(self.status_var.get())
         if switch == 0:

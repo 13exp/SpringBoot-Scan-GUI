@@ -4,6 +4,7 @@ import base64
 import requests
 
 from util import RandomUA
+from util.Translate import tr
 
 class JeeSpring_2023:
     def __init__(self):
@@ -33,22 +34,22 @@ class JeeSpring_2023:
 
             code1 = re1.status_code
             if ('jsp' in str(re1.text)) and (int(code1) == 200):
-                result1 = "[+] Payload已经发送，成功上传JSP\n"
+                result1 = tr("v.jee.payload")
                 newpath = str(re1.text)
                 urltest = url + "static/uploadify/" + newpath.strip()
                 retest = requests.get(url=urltest, verify=False, proxies=proxies)
                 code2 = retest.status_code
                 if ('Hello' in str(retest.text)) and (code2 == 200):
-                    result2 = f"[+] {urltest} 存在2023JeeSpring任意文件上传漏洞"
+                    result2 = tr("v.jee.found", url=urltest)
                     return result1 + result2
                 else:
-                    result2 = f"[-] {urltest} 未发现Poc存活，请手动验证"
+                    result2 = tr("v.jee.manual", url=urltest)
                     return result1 + result2
             else:
-                result = f"[-] {url} 2023JeeSpring任意文件上传漏洞不存在"
+                result = tr("v.jee.none", url=url)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     def exp(self,url,proxies,ProxyStute,cmd):
         pass

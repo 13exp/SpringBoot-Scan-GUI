@@ -2,6 +2,7 @@
 
 import requests
 from util import RandomUA
+from util.Translate import tr
 
 class SnakeYAML_RCE:
     def __init__(self):
@@ -33,20 +34,20 @@ class SnakeYAML_RCE:
                             verify=False, proxies=proxies)
 
             if ('example.yml' in str(re1.text)):
-                result1 = "[+] 发现SnakeYAML-RCE漏洞，Poc为Spring 1.x\n"
-                result2 = f"漏洞存在路径为 {urltest}\n"
-                result3 = f"'POST数据包内容为 {self.payload_1}"
+                result1 = tr("v.snake.found1")
+                result2 = tr("v.snake.path", url=urltest)
+                result3 = tr("v.snake.post", payload=self.payload_1)
                 return result1 + result2 + result3
             elif ('example.yml' in str(re2.text)):
-                result1 = "[+] 发现SnakeYAML-RCE漏洞，Poc为Spring 2.x\n"
-                result2 = f"漏洞存在路径为 {urltest}\n"
-                result3 = f"'POST数据包内容为 {self.payload_2}"
+                result1 = tr("v.snake.found2")
+                result2 = tr("v.snake.path", url=urltest)
+                result3 = tr("v.snake.post", payload=self.payload_2)
                 return result1 + result2 + result3
             else:
-                result = f"[-] {urltest}未发现SnakeYAML-RCE漏洞"
+                result = tr("v.snake.none", url=urltest)
                 return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     def exp(self,url,proxies,ProxyStute,cmd):
         pass

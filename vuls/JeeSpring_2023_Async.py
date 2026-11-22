@@ -3,6 +3,7 @@
 import aiohttp
 import base64
 from util import RandomUA
+from util.Translate import tr
 
 class JeeSpring_2023_Async:
     def __init__(self):
@@ -37,22 +38,22 @@ class JeeSpring_2023_Async:
                 text1, code1 = await self.fetch(session, url + self.path, self.payload, self.headers1, proxy)
 
                 if 'jsp' in text1 and code1 == 200:
-                    result1 = "[+] Payload已经发送，成功上传JSP\n"
+                    result1 = tr("v.jee.payload")
                     newpath = text1.strip()
                     urltest = url + "static/uploadify/" + newpath
                     text2, code2 = await self.fetch(session, urltest, b"", self.headers1, proxy)
 
                     if 'Hello' in text2 and code2 == 200:
-                        result2 = f"[+] {urltest} 存在2023JeeSpring任意文件上传漏洞"
+                        result2 = tr("v.jee.found", url=urltest)
                         return result1 + result2
                     else:
-                        result2 = f"[-] {urltest} 未发现Poc存活，请手动验证"
+                        result2 = tr("v.jee.manual", url=urltest)
                         return result1 + result2
                 else:
-                    result = f"[-] {url} 2023JeeSpring任意文件上传漏洞不存在"
+                    result = tr("v.jee.none", url=url)
                     return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     async def exp(self, url, proxies, ProxyStute):
         pass

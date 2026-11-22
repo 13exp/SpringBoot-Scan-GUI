@@ -6,6 +6,7 @@ import tkinter.font as tkFont
 import os
 
 from util import JsonMethod
+from util.Translate import tr
 
 class FofaConfig:
     def __init__(self):
@@ -26,7 +27,7 @@ class FofaConfig:
         self.configinit(self.fofapath)
         
         self.window = Toplevel(name='fofa')
-        self.window.title("Fofa设置")
+        self.window.title(tr("cfg.fofa_title"))
         self.window.geometry("380x210")
         self.window.resizable(0, 0)
 
@@ -62,11 +63,11 @@ class FofaConfig:
         self.fofa_size_entry.insert('insert', fofaconfig['size'])
         
         # 保存与取消
-        Button(self.window, text="保存", font=tkFont.Font(size=12), width=9, command=self.update,
+        Button(self.window, text=tr("common.save"), font=tkFont.Font(size=12), width=9, command=self.update,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=50, y=160)
 
-        Button(self.window, text="取消", font=tkFont.Font(size=12), width=9, command=self.window.destroy,
+        Button(self.window, text=tr("common.cancel"), font=tkFont.Font(size=12), width=9, command=self.window.destroy,
                height=1, fg="white", bg="gray", activeforeground="white", activebackground="black",
                cursor="hand2").place(x=240, y=160)
         self.window.mainloop()
@@ -83,7 +84,7 @@ class FofaConfig:
                 }
         self.config = JsonMethod.JsonMethod()
         self.config.JsonWrite(data,self.fofapath)
-        messagebox.showinfo("更新","更新成功！")
+        messagebox.showinfo(tr("common.update"),tr("common.update_success"))
 if __name__ == "__main__":
     pass
     

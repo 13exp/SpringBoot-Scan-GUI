@@ -5,6 +5,7 @@ import aiohttp
 import asyncio
 
 from util import RandomUA
+from util.Translate import tr
 
 class CVE_2022_22947_Async:
     def __init__(self):
@@ -66,14 +67,14 @@ class CVE_2022_22947_Async:
                 responses = await asyncio.gather(*tasks)
 
                 if 'uid=' in str(responses[2]) and 'gid=' in str(responses[2]) and 'groups=' in str(responses[2]):
-                    result = f"[-] {url} Payload已经输出，回显结果如下"
+                    result = tr("v.22947.out_neg", url=url)
                     result1 = responses[2] + "\n"
                     return result + result1
                 else:
-                    result = f"[-] {url} CVE-2022-22947漏洞不存在"
+                    result = tr("v.22947.none", url=url)
                     return result
         except Exception as e:
-            error = f"[error] {url} 未知错误 {e}"
+            error = tr("v.unknown", url=url, e=e)
             return error
     async def exp(self, url, proxies, ProxyStute):
         pass
